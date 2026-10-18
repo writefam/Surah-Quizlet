@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al-Masad Vocabulary — Week Four</title>
+<style>
+  :root{
+    --primary:#2c3e50;
+    --secondary:#34495e;
+    --accent:#e67e22;
+    --bg:#f4f6f8;
+    --card-bg:#ffffff;
+    --correct:#27ae60;
+    --wrong:#e74c3c;
+  }
+  *{box-sizing:border-box;}
+  html,body{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background-color:var(--bg);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    color:var(--primary);
+  }
+  h1{
+    font-size:1.65rem;
+    color:var(--primary);
+    margin:0 0 6px;
+    text-align:center;
+    font-weight:700;
+  }
+  .subtitle{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:1.6px;
+    color:#95a5a6;
+    text-align:center;
+    margin-bottom:18px;
+    font-weight:600;
+  }
+  
+  /* ---------- Back link — inherits .tab look, anchor needs underline removed ---------- */
+  .nav-back{
+    text-decoration:none;
+    margin-left:4px;
+    box-shadow:inset 1px 0 0 #ecf0f1;
+  }
+
+  .app-container{
+    width:100%;
+    max-width:650px;
+    margin:0 auto;
+    background:var(--card-bg);
+    border-radius:12px;
+    box-shadow:0 6px 24px rgba(44,62,80,0.10);
+    padding:20px;
+  }
+
+  /* ---------- TABS ---------- */
+  .nav-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+    border-bottom:2px solid #ecf0f1;
+    padding-bottom:8px;
+    margin-bottom:20px;
+  }
+  .tab{
+    font-family:inherit;
+    font-size:0.84rem;
+    font-weight:600;
+    color:#7f8c8d;
+    background:transparent;
+    border:none;
+    border-radius:5px;
+    padding:8px 12px;
+    cursor:pointer;
+    transition:background .2s, color .2s;
+    white-space:nowrap;
+  }
+  .tab:hover:not(.active){background:#ecf0f1;}
+  .tab.active{background:var(--primary); color:#ffffff;}
+
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .hidden{display:none !important;}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    font-family:inherit;
+    font-size:0.88rem;
+    font-weight:600;
+    border:none;
+    border-radius:6px;
+    padding:10px 16px;
+    cursor:pointer;
+    background:var(--primary);
+    color:#ffffff;
+    transition:background .2s, opacity .2s, transform .1s;
+  }
+  .btn:hover:not(:disabled){background:var(--secondary);}
+  .btn:active:not(:disabled){transform:scale(0.98);}
+  .btn:disabled{opacity:.45; cursor:not-allowed;}
+  .btn-accent{background:var(--accent);}
+  .btn-accent:hover:not(:disabled){background:#cf711b;}
+  .btn-outline{background:#ffffff; color:var(--primary); border:2px solid var(--primary); padding:8px 14px;}
+  .btn-outline:hover:not(:disabled){background:#ecf0f1; color:var(--primary);}
+
+  .round-btn{
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    background:var(--primary);
+    color:#ffffff;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    font-size:0.95rem;
+    line-height:1;
+    flex-shrink:0;
+    padding:0;
+    transition:background .2s, transform .15s;
+  }
+  .round-btn:hover{background:var(--secondary);}
+  .round-btn:active{transform:scale(0.94);}
+  .round-btn.lg{width:48px; height:48px; font-size:1.25rem;}
+  .round-btn.copy{background:var(--accent);}
+  .round-btn.copy:hover{background:#cf711b;}
+  .round-btn.speaking{animation:pulse 1s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(230,126,34,.65);}
+    70%{box-shadow:0 0 0 12px rgba(230,126,34,0);}
+    100%{box-shadow:0 0 0 0 rgba(230,126,34,0);}
+  }
+
+  /* ---------- FLASHCARDS ---------- */
+  .card-scene{
+    height:350px;
+    perspective:1000px;
+    margin-bottom:16px;
+  }
+  .flashcard{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-style:preserve-3d;
+    transition:transform .6s;
+    cursor:pointer;
+  }
+  .flashcard.flipped{transform:rotateY(180deg);}
+  .card-face{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    border-radius:12px;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .card-front{
+    background:linear-gradient(135deg,#ffffff 0%,#ecf0f1 100%);
+    border:2px solid #bdc3c7;
+  }
+  .card-back{
+    background:linear-gradient(135deg,#e8f4f8 0%,#d1e8f0 100%);
+    border:2px solid #a9cce3;
+    transform:rotateY(180deg);
+  }
+  .fc-arabic{
+    font-size:3.5rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    color:var(--primary);
+    line-height:1.5;
+    margin-bottom:14px;
+    font-weight:700;
+  }
+  .fc-hint{
+    position:absolute;
+    bottom:14px;
+    left:0; right:0;
+    text-align:center;
+    font-size:0.72rem;
+    color:#95a5a6;
+    letter-spacing:.4px;
+  }
+  .fc-emoji{
+    font-size:3rem;
+    line-height:1;
+    margin-bottom:10px;
+  }
+  .fc-english{
+    font-size:1.6rem;
+    font-weight:700;
+    color:var(--primary);
+    margin-bottom:12px;
+  }
+  .fc-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:0.9rem;
+    line-height:1.45;
+    max-width:460px;
+  }
+  .card-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .progress{
+    font-weight:700;
+    color:var(--secondary);
+    font-size:0.9rem;
+    white-space:nowrap;
+  }
+  .center-row{
+    display:flex;
+    justify-content:center;
+    margin-top:16px;
+  }
+
+  /* ---------- QUIZ ---------- */
+  .quiz-score{
+    text-align:center;
+    font-weight:700;
+    color:var(--secondary);
+    font-size:1rem;
+    margin-bottom:12px;
+  }
+  .quiz-prompt{
+    text-align:center;
+    font-weight:700;
+    color:var(--primary);
+    font-size:1rem;
+    margin:0 0 14px;
+  }
+  .prompt-word-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:6px;
+  }
+  .prompt-arabic{
+    font-size:3rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    font-weight:700;
+    color:var(--primary);
+    line-height:1.4;
+  }
+  .prompt-emoji{
+    font-size:3rem;
+    line-height:1;
+    text-align:center;
+    margin-bottom:8px;
+  }
+  .english-word{
+    font-size:1.6rem;
+    font-weight:700;
+    color:var(--primary);
+    direction:ltr;
+  }
+  .prompt-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:0.9rem;
+    text-align:center;
+    line-height:1.45;
+    margin:12px auto 0;
+    max-width:480px;
+  }
+  .prompt-block{
+    padding:6px 0 14px;
+    border-bottom:1px solid #ecf0f1;
+    margin-bottom:16px;
+  }
+  .option-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .option-btn{
+    flex-grow:1;
+    text-align:left;
+    font-family:inherit;
+    font-size:1rem;
+    padding:12px 14px;
+    border-radius:8px;
+    border:2px solid #dfe6e9;
+    background:#ffffff;
+    color:var(--primary);
+    cursor:pointer;
+    transition:border-color .2s, background .2s, color .2s;
+    min-width:0;
+  }
+  .option-btn:hover:not(:disabled){border-color:var(--primary); background:#f8fafb;}
+  .option-btn:disabled{cursor:default;}
+  .option-btn.correct{
+    background:#e8f8f0;
+    border-color:var(--correct);
+    color:var(--correct);
+    font-weight:700;
+  }
+  .option-btn.wrong{
+    background:#fdecea;
+    border-color:var(--wrong);
+    color:var(--wrong);
+    font-weight:700;
+  }
+  .option-btn.ar{
+    direction:rtl;
+    unicode-bidi:isolate;
+    font-size:1.5rem;
+    text-align:right;
+    line-height:1.6;
+    padding:10px 16px;
+  }
+  .feedback{
+    text-align:center;
+    font-weight:600;
+    font-size:0.95rem;
+    margin-top:14px;
+    min-height:1.3em;
+    line-height:1.4;
+  }
+  .feedback.correct{color:var(--correct);}
+  .feedback.wrong{color:var(--wrong);}
+  .completed-msg{
+    color:var(--accent);
+    font-weight:700;
+    font-size:1.05rem;
+  }
+  .quiz-actions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+
+  /* ---------- STUDY GUIDE ---------- */
+  .sg-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+  .sg-title{
+    font-weight:700;
+    color:var(--primary);
+    font-size:1rem;
+  }
+  .sg-list{
+    max-height:450px;
+    overflow-y:auto;
+    padding-right:6px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .sg-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:12px;
+    border:1px solid #ecf0f1;
+    border-radius:10px;
+    margin-bottom:10px;
+    background:#ffffff;
+  }
+  .sg-emoji{
+    font-size:2rem;
+    line-height:1.1;
+    flex-shrink:0;
+    width:42px;
+    text-align:center;
+  }
+  .sg-content{
+    flex:1;
+    min-width:0;
+  }
+  .ar-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .ar-text{
+    font-size:1.8rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    font-weight:700;
+    color:var(--primary);
+    line-height:1.6;
+  }
+  .en-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+  .en-text{
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--secondary);
+  }
+  .sg-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:0.86rem;
+    line-height:1.45;
+    margin-top:6px;
+  }
+  .sg-list.hide-details .sg-details{display:none;}
+
+  /* ---------- FOOTER ---------- */
+  .app-footer{
+    margin-top:22px;
+    padding-top:14px;
+    border-top:1px solid #ecf0f1;
+    font-size:0.8rem;
+    color:#95a5a6;
+    text-align:center;
+    line-height:1.55;
+  }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width:480px){
+    body{padding:12px;}
+    h1{font-size:1.25rem;}
+    .subtitle{font-size:0.62rem; letter-spacing:1.1px; margin-bottom:14px;}
+    .app-container{padding:14px; border-radius:10px;}
+    .tab{font-size:0.74rem; padding:7px 9px;}
+    .nav-tabs{margin-bottom:16px;}
+    .card-scene{height:320px;}
+    .fc-arabic{font-size:2.4rem;}
+    .fc-english{font-size:1.25rem;}
+    .fc-desc{font-size:0.8rem;}
+    .fc-emoji{font-size:2.3rem;}
+    .btn{font-size:0.78rem; padding:9px 12px;}
+    .btn-outline{padding:7px 10px;}
+    .round-btn.lg{width:44px; height:44px; font-size:1.1rem;}
+    .prompt-arabic{font-size:2.3rem;}
+    .prompt-emoji{font-size:2.4rem;}
+    .english-word{font-size:1.25rem;}
+    .prompt-desc{font-size:0.82rem;}
+    .option-btn{font-size:0.9rem; padding:10px 12px;}
+    .option-btn.ar{font-size:1.2rem; padding:9px 12px;}
+    .ar-text{font-size:1.45rem;}
+    .en-text{font-size:1rem;}
+    .sg-emoji{font-size:1.7rem; width:34px;}
+    .quiz-score{font-size:0.92rem;}
+    .quiz-prompt{font-size:0.9rem;}
+  }
+</style>
+</head>
+<body>
+
+<h1>Al-Masad Vocabulary</h1>
+<div class="subtitle">Al-Masad · What Your Hands Do</div>
+
+<div class="app-container">
+
+  <!-- ================= TABS ================= -->
+  <div class="nav-tabs">
+    <button class="tab active" data-tab="flashcards">Flashcards</button>
+    <button class="tab" data-tab="ar2en">Quiz (Ar ➔ En)</button>
+    <button class="tab" data-tab="en2ar">Quiz (En ➔ Ar)</button>
+    <button class="tab" data-tab="study">Study Guide</button>
+    <a class="tab nav-back" href="index.html">← All Surahs</a>
+  </div>
+
+  <!-- ================= FLASHCARDS ================= -->
+  <div id="panel-flashcards" class="tab-panel active">
+    <div class="card-scene">
+      <div class="flashcard" id="flashcard">
+        <div class="card-face card-front">
+          <div class="fc-arabic" id="fc-arabic">تَبَّتْ</div>
+          <button class="round-btn lg" id="fc-audio-ar" title="Listen in Arabic" aria-label="Listen in Arabic">🔊</button>
+          <div class="fc-hint">Tap card to flip</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="fc-emoji" id="fc-emoji">👐</div>
+          <div class="fc-english" id="fc-english">Perished, ruined</div>
+          <button class="round-btn" id="fc-audio-en" title="Listen in English" aria-label="Listen in English">🔊</button>
+          <div class="fc-desc" id="fc-desc"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-nav">
+      <button class="btn btn-outline" id="fc-prev">‹ Previous</button>
+      <span class="progress" id="fc-progress">1 / 12</span>
+      <button class="btn btn-outline" id="fc-next">Next ›</button>
+    </div>
+
+    <div class="center-row">
+      <button class="btn btn-accent" id="fc-shuffle">Shuffle Deck</button>
+    </div>
+  </div>
+
+  <!-- ================= QUIZ AR ➔ EN ================= -->
+  <div id="panel-ar2en" class="tab-panel">
+    <div class="quiz-score" id="q1-score">Score: 0 / 12</div>
+    <p class="quiz-prompt">What is the meaning of this word?</p>
+
+    <div class="prompt-block" id="q1-prompt">
+      <div class="prompt-word-row">
+        <span class="prompt-arabic" id="q1-arabic"></span>
+        <button class="round-btn lg" id="q1-audio" title="Listen in Arabic" aria-label="Listen in Arabic">🔊</button>
+        <button class="round-btn lg copy" id="q1-copy" title="Copy Arabic word" aria-label="Copy Arabic word">📋</button>
+      </div>
+    </div>
+
+    <div id="q1-options"></div>
+    <div class="feedback" id="q1-feedback"></div>
+
+    <div class="quiz-actions">
+      <button class="btn" id="q1-next" disabled>Next Question</button>
+      <button class="btn btn-outline" id="q1-restart">Restart Quiz</button>
+    </div>
+  </div>
+
+  <!-- ================= QUIZ EN ➔ AR ================= -->
+  <div id="panel-en2ar" class="tab-panel">
+    <div class="quiz-score" id="q2-score">Score: 0 / 12</div>
+    <p class="quiz-prompt">Which Arabic word matches this meaning?</p>
+
+    <div class="prompt-block" id="q2-prompt">
+      <div class="prompt-emoji" id="q2-emoji"></div>
+      <div class="prompt-word-row">
+        <span class="english-word" id="q2-english"></span>
+        <button class="round-btn" id="q2-audio" title="Listen in English" aria-label="Listen in English">🔊</button>
+      </div>
+      <div class="prompt-desc" id="q2-desc"></div>
+    </div>
+
+    <div id="q2-options"></div>
+    <div class="feedback" id="q2-feedback"></div>
+
+    <div class="quiz-actions">
+      <button class="btn" id="q2-next" disabled>Next Question</button>
+      <button class="btn btn-outline" id="q2-restart">Restart Quiz</button>
+    </div>
+  </div>
+
+  <!-- ================= STUDY GUIDE ================= -->
+  <div id="panel-study" class="tab-panel">
+    <div class="sg-header">
+      <div class="sg-title">All 12 Vocabulary Words</div>
+      <button class="btn btn-accent" id="sg-toggle">Hide Details</button>
+    </div>
+    <div class="sg-list" id="sg-list"></div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <div class="app-footer">
+    Browser text-to-speech is not perfect for Qur'anic Arabic — it can mispronounce letters and harakāt.
+    Always verify your recitation with a teacher or a dedicated Qur'an app.
+    For the most accurate audio, tap the 📋 copy button and paste the word into your trusted Qur'an app.
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     VOCABULARY DATA — taken from pages 1 & 2 of the study guide
+     Fields: id, arabic, english, emoji, description
+     ============================================================ */
+  var vocab = [
+    {
+      id: 1,
+      arabic: 'تَبَّتْ',
+      english: 'Perished, ruined',
+      emoji: '👐',
+      description: 'We chose hands with dry dust falling through them, because everything he held slipped away and left nothing behind.'
+    },
+    {
+      id: 2,
+      arabic: 'يَدَا',
+      english: 'The two hands',
+      emoji: '🖐️',
+      description: 'We chose handprints pressed on a wall, because a print is what your hands leave behind them.'
+    },
+    {
+      id: 3,
+      arabic: 'أَبِي لَهَبٍ',
+      english: 'Abu Lahab',
+      emoji: '🏷️',
+      description: "We chose a shop name-board with a flame carved on it. His name means father of flame, and a name-board is where a man's name hangs."
+    },
+    {
+      id: 4,
+      arabic: 'مَا أَغْنَى',
+      english: 'Did not help',
+      emoji: '🔓',
+      description: 'We chose a padlock snapped in two. A lock is meant to protect, and this one did not.'
+    },
+    {
+      id: 5,
+      arabic: 'مَالُهُ',
+      english: 'His wealth',
+      emoji: '💰',
+      description: 'We chose an open chest of coins: everything he owned, out in plain sight.'
+    },
+    {
+      id: 6,
+      arabic: 'كَسَبَ',
+      english: 'He earned',
+      emoji: '🧾',
+      description: 'We chose a ledger of tally marks, because what you earn is counted and written down.'
+    },
+    {
+      id: 7,
+      arabic: 'سَيَصْلَى',
+      english: 'He will burn',
+      emoji: '🏹',
+      description: 'We chose a trail of arrows across the ground, because this word is the road he is walking, not the fire at the end of it.'
+    },
+    {
+      id: 8,
+      arabic: 'نَارًا',
+      english: 'A fire',
+      emoji: '🔥',
+      description: 'We chose a bonfire inside a ring of stones: the fire as a thing you could point at.'
+    },
+    {
+      id: 9,
+      arabic: 'ذَاتَ لَهَبٍ',
+      english: 'Full of flame',
+      emoji: '♨️',
+      description: 'We chose flames on their own with no logs under them, because this word is not the fire but what the fire is like.'
+    },
+    {
+      id: 10,
+      arabic: 'امْرَأَتُهُ',
+      english: 'His wife',
+      emoji: '🧕',
+      description: 'We chose her face on its own, because this word names the person, not what she is carrying.'
+    },
+    {
+      id: 11,
+      arabic: 'حَمَّالَةَ الْحَطَبِ',
+      english: 'The firewood carrier',
+      emoji: '🪵',
+      description: 'We chose the bundle and its straps with no person at all, because this word names the load, not the woman.'
+    },
+    {
+      id: 12,
+      arabic: 'حَبْلٌ مِنْ مَسَدٍ',
+      english: 'A rope of palm fiber',
+      emoji: '🪢',
+      description: 'We chose a braided rope with its end frayed open, so you can see it is twisted from plant fibre and not smooth cord.'
+    }
+  ];
+
+  var TOTAL = vocab.length;
+
+  /* ============================================================
+     AUDIO ENGINE
+     ============================================================ */
+  var voiceCache = [];
+
+  function loadVoices() {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      voiceCache = window.speechSynthesis.getVoices() || [];
+    } catch (e) {
+      voiceCache = [];
+    }
+  }
+
+  if ('speechSynthesis' in window) {
+    loadVoices();
+    if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    // Safari sometimes needs a nudge
+    setTimeout(loadVoices, 300);
+  }
+
+  function pickVoice(lang) {
+    if (!voiceCache.length) loadVoices();
+    var target = lang.toLowerCase();
+    var short = target.split('-')[0];
+    var i;
+    for (i = 0; i < voiceCache.length; i++) {
+      var v = voiceCache[i];
+      if (v.lang && v.lang.replace('_', '-').toLowerCase() === target) return v;
+    }
+    for (i = 0; i < voiceCache.length; i++) {
+      var v2 = voiceCache[i];
+      if (v2.lang && v2.lang.toLowerCase().indexOf(short) === 0) return v2;
+    }
+    return null;
+  }
+
+  /**
+   * FINAL HARAKAH TRICK
+   * For Arabic only: if the last character is Fathah, Dammah or Kasrah,
+   * append an Arabic comma (U+060C) so the TTS engine pronounces the
+   * final short vowel. If it is Sukoon, return unchanged.
+   * Never modifies the text used for copying.
+   */
+  function getTTSText(text, lang) {
+    if (!text) return text;
+    if (!lang || lang.toLowerCase().indexOf('ar') !== 0) return text;
+    var last = text.charAt(text.length - 1);
+    if (last === '\u064E' || last === '\u064F' || last === '\u0650') {
+      return text + '\u060C';
+    }
+    if (last === '\u0652') {
+      return text;
+    }
+    return text;
+  }
+
+  function stopSpeech() {
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+    }
+    var speaking = document.querySelectorAll('.speaking');
+    for (var i = 0; i < speaking.length; i++) {
+      speaking[i].classList.remove('speaking');
+    }
+  }
+
+  function speak(text, lang, btn) {
+    if (!('speechSynthesis' in window) || !text) return;
+    stopSpeech();
+
+    var utter = new SpeechSynthesisUtterance(getTTSText(text, lang));
+    utter.lang = lang;
+    utter.rate = 0.5;
+    utter.pitch = 1.0;
+
+    var v = pickVoice(lang);
+    if (v) utter.voice = v;
+
+    if (btn) {
+      btn.classList.add('speaking');
+      utter.onend = function () { btn.classList.remove('speaking'); };
+      utter.onerror = function () { btn.classList.remove('speaking'); };
+    }
+
+    try {
+      window.speechSynthesis.speak(utter);
+    } catch (e) {
+      if (btn) btn.classList.remove('speaking');
+    }
+  }
+
+  /* ============================================================
+     COPY
+     ============================================================ */
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  function copyText(text, btn) {
+    var finish = function () {
+      if (!btn) return;
+      var prev = btn.textContent;
+      btn.textContent = '✅';
+      setTimeout(function () { btn.textContent = '📋'; }, 1500);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(finish, function () {
+        fallbackCopy(text);
+        finish();
+      });
+    } else {
+      fallbackCopy(text);
+      finish();
+    }
+  }
+
+  /* ============================================================
+     HELPERS
+     ============================================================ */
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+    }
+    return a;
+  }
+
+  function $(id) { return document.getElementById(id); }
+
+  /* ============================================================
+     TABS
+     ============================================================ */
+  var tabs = document.querySelectorAll('.tab');
+  for (var t = 0; t < tabs.length; t++) {
+    tabs[t].addEventListener('click', function () {
+      stopSpeech();
+      var name = this.getAttribute('data-tab');
+      var allTabs = document.querySelectorAll('.tab');
+      for (var i = 0; i < allTabs.length; i++) allTabs[i].classList.remove('active');
+      this.classList.add('active');
+
+      var panels = document.querySelectorAll('.tab-panel');
+      for (var j = 0; j < panels.length; j++) panels[j].classList.remove('active');
+      var target = $('panel-' + name);
+      if (target) target.classList.add('active');
+    });
+  }
+
+  /* ============================================================
+     FLASHCARDS
+     ============================================================ */
+  var deck = vocab.slice();
+  var cardIndex = 0;
+
+  function renderFlashcard() {
+    var w = deck[cardIndex];
+    if (!w) return;
+    $('fc-arabic').textContent = w.arabic;
+    $('fc-emoji').textContent = w.emoji;
+    $('fc-english').textContent = w.english;
+    $('fc-desc').textContent = w.description;
+    $('fc-progress').textContent = (cardIndex + 1) + ' / ' + deck.length;
+    $('flashcard').classList.remove('flipped');
+  }
+
+  $('flashcard').addEventListener('click', function () {
+    this.classList.toggle('flipped');
+  });
+
+  $('fc-audio-ar').addEventListener('click', function (e) {
+    e.stopPropagation();
+    speak(deck[cardIndex].arabic, 'ar-SA', this);
+  });
+
+  $('fc-audio-en').addEventListener('click', function (e) {
+    e.stopPropagation();
+    speak(deck[cardIndex].english, 'en-US', this);
+  });
+
+  $('fc-prev').addEventListener('click', function () {
+    stopSpeech();
+    cardIndex = (cardIndex - 1 + deck.length) % deck.length;
+    renderFlashcard();
+  });
+
+  $('fc-next').addEventListener('click', function () {
+    stopSpeech();
+    cardIndex = (cardIndex + 1) % deck.length;
+    renderFlashcard();
+  });
+
+  $('fc-shuffle').addEventListener('click', function () {
+    stopSpeech();
+    deck = shuffle(vocab);
+    cardIndex = 0;
+    renderFlashcard();
+  });
+
+  /* ============================================================
+     QUIZZES
+     ============================================================ */
+  var quizState = {
+    ar2en: { order: [], idx: 0, score: 0, answered: false, current: null },
+    en2ar: { order: [], idx: 0, score: 0, answered: false, current: null }
+  };
+
+  function prefixOf(mode) { return mode === 'ar2en' ? 'q1' : 'q2'; }
+
+  function buildQuiz(mode) {
+    var st = quizState[mode];
+    st.order = shuffle(vocab.map(function (_, i) { return i; }));
+    st.idx = 0;
+    st.score = 0;
+    st.answered = false;
+    st.current = null;
+    renderQuestion(mode);
+  }
+
+  function renderQuestion(mode) {
+    var st = quizState[mode];
+    var p = prefixOf(mode);
+
+    var scoreEl   = $(p + '-score');
+    var promptBox = $(p + '-prompt');
+    var optionsEl = $(p + '-options');
+    var fbEl      = $(p + '-feedback');
+    var nextBtn   = $(p + '-next');
+
+    st.answered = false;
+    nextBtn.disabled = true;
+    fbEl.textContent = '';
+    fbEl.className = 'feedback';
+    scoreEl.textContent = 'Score: ' + st.score + ' / ' + TOTAL;
+
+    if (st.idx >= TOTAL) {
+      promptBox.classList.add('hidden');
+      optionsEl.innerHTML = '';
+      fbEl.innerHTML = '<span class="completed-msg">Quiz Completed! 🎉 Final score: ' +
+                       st.score + ' / ' + TOTAL + '</span>';
+      return;
+    }
+
+    promptBox.classList.remove('hidden');
+
+    var word = vocab[st.order[st.idx]];
+    st.current = word;
+
+    if (mode === 'ar2en') {
+      $('q1-arabic').textContent = word.arabic;
+    } else {
+      $('q2-emoji').textContent = word.emoji;
+      $('q2-english').textContent = word.english;
+      $('q2-desc').textContent = word.description;
+    }
+
+    renderOptions(mode, word, optionsEl);
+  }
+
+  function renderOptions(mode, word, optionsEl) {
+    var others = shuffle(vocab.filter(function (w) { return w.id !== word.id; })).slice(0, 3);
+    var opts = shuffle([word].concat(others));
+    var lang = (mode === 'ar2en') ? 'en-US' : 'ar-SA';
+    var html = '';
+
+    for (var i = 0; i < opts.length; i++) {
+      var o = opts[i];
+      var label = (mode === 'ar2en') ? o.english : o.arabic;
+      var cls = (mode === 'ar2en') ? 'option-btn' : 'option-btn ar';
+      var isCorrect = (o.id === word.id) ? '1' : '0';
+      var idx = vocab.indexOf(o);
+
+      html += '<div class="option-row">' +
+                '<button class="' + cls + '" data-correct="' + isCorrect + '" data-idx="' + idx + '">' +
+                  label +
+                '</button>' +
+                '<button class="round-btn" data-audio-idx="' + idx + '" data-lang="' + lang + '" ' +
+                        'title="Listen" aria-label="Listen">🔊</button>' +
+              '</div>';
+    }
+
+    optionsEl.innerHTML = html;
+
+    var audioBtns = optionsEl.querySelectorAll('.round-btn');
+    for (var a = 0; a < audioBtns.length; a++) {
+      audioBtns[a].addEventListener('click', function (e) {
+        e.stopPropagation();
+        var w = vocab[parseInt(this.getAttribute('data-audio-idx'), 10)];
+        var lg = this.getAttribute('data-lang');
+        var txt = (lg.indexOf('ar') === 0) ? w.arabic : w.english;
+        speak(txt, lg, this);
+      });
+    }
+
+    var optBtns = optionsEl.querySelectorAll('.option-btn');
+    for (var b = 0; b < optBtns.length; b++) {
+      optBtns[b].addEventListener('click', function () {
+        handleAnswer(mode, this);
+      });
+    }
+  }
+
+  function handleAnswer(mode, btn) {
+    var st = quizState[mode];
+    if (st.answered) return;
+    st.answered = true;
+
+    var p = prefixOf(mode);
+    var optionsEl = $(p + '-options');
+    var fbEl      = $(p + '-feedback');
+    var nextBtn   = $(p + '-next');
+    var scoreEl   = $(p + '-score');
+
+    var allBtns = optionsEl.querySelectorAll('.option-btn');
+    for (var i = 0; i < allBtns.length; i++) {
+      allBtns[i].disabled = true;
+      if (allBtns[i].getAttribute('data-correct') === '1') {
+        allBtns[i].classList.add('correct');
+      }
+    }
+
+    var word = st.current;
+    var isCorrect = btn.getAttribute('data-correct') === '1';
+
+    if (isCorrect) {
+      st.score++;
+      fbEl.textContent = 'Correct! ✅';
+      fbEl.className = 'feedback correct';
+    } else {
+      btn.classList.add('wrong');
+      var answer = (mode === 'ar2en') ? word.english : word.arabic;
+      fbEl.textContent = 'Incorrect. The correct answer is: ' + answer;
+      fbEl.className = 'feedback wrong';
+    }
+
+    scoreEl.textContent = 'Score: ' + st.score + ' / ' + TOTAL;
+    nextBtn.disabled = false;
+  }
+
+  /* --- Quiz 1 (Ar ➔ En) controls --- */
+  $('q1-audio').addEventListener('click', function () {
+    var w = quizState.ar2en.current;
+    if (w) speak(w.arabic, 'ar-SA', this);
+  });
+  $('q1-copy').addEventListener('click', function () {
+    var w = quizState.ar2en.current;
+    if (w) copyText(w.arabic, this);
+  });
+  $('q1-next').addEventListener('click', function () {
+    stopSpeech();
+    quizState.ar2en.idx++;
+    renderQuestion('ar2en');
+  });
+  $('q1-restart').addEventListener('click', function () {
+    stopSpeech();
+    buildQuiz('ar2en');
+  });
+
+  /* --- Quiz 2 (En ➔ Ar) controls --- */
+  $('q2-audio').addEventListener('click', function () {
+    var w = quizState.en2ar.current;
+    if (w) speak(w.english, 'en-US', this);
+  });
+  $('q2-next').addEventListener('click', function () {
+    stopSpeech();
+    quizState.en2ar.idx++;
+    renderQuestion('en2ar');
+  });
+  $('q2-restart').addEventListener('click', function () {
+    stopSpeech();
+    buildQuiz('en2ar');
+  });
+
+  /* ============================================================
+     STUDY GUIDE
+     ============================================================ */
+  function renderStudyGuide() {
+    var list = $('sg-list');
+    var html = '';
+
+    for (var i = 0; i < vocab.length; i++) {
+      var w = vocab[i];
+      html += '<div class="sg-item">' +
+                '<div class="sg-emoji">' + w.emoji + '</div>' +
+                '<div class="sg-content">' +
+                  '<div class="ar-row">' +
+                    '<span class="ar-text">' + w.arabic + '</span>' +
+                    '<button class="round-btn" data-audio-idx="' + i + '" data-lang="ar-SA" ' +
+                            'title="Listen in Arabic" aria-label="Listen in Arabic">🔊</button>' +
+                    '<button class="round-btn copy" data-copy-idx="' + i + '" ' +
+                            'title="Copy Arabic word" aria-label="Copy Arabic word">📋</button>' +
+                  '</div>' +
+                  '<div class="sg-details">' +
+                    '<div class="en-row">' +
+                      '<span class="en-text">' + w.english + '</span>' +
+                      '<button class="round-btn" data-audio-idx="' + i + '" data-lang="en-US" ' +
+                              'title="Listen in English" aria-label="Listen in English">🔊</button>' +
+                    '</div>' +
+                    '<div class="sg-desc">' + w.description + '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+    }
+
+    list.innerHTML = html;
+  }
+
+  $('sg-list').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('button') : null;
+    if (!btn) return;
+
+    if (btn.hasAttribute('data-copy-idx')) {
+      var ci = parseInt(btn.getAttribute('data-copy-idx'), 10);
+      copyText(vocab[ci].arabic, btn);
+      return;
+    }
+
+    if (btn.hasAttribute('data-audio-idx')) {
+      var ai = parseInt(btn.getAttribute('data-audio-idx'), 10);
+      var lang = btn.getAttribute('data-lang');
+      var w = vocab[ai];
+      var text = (lang.indexOf('ar') === 0) ? w.arabic : w.english;
+      speak(text, lang, btn);
+    }
+  });
+
+  var detailsHidden = false;
+  $('sg-toggle').addEventListener('click', function () {
+    detailsHidden = !detailsHidden;
+    $('sg-list').classList.toggle('hide-details', detailsHidden);
+    this.textContent = detailsHidden ? 'Show Details' : 'Hide Details';
+  });
+
+  /* ============================================================
+     GLOBAL SPEECH CLEANUP
+     ============================================================ */
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopSpeech();
+  });
+  window.addEventListener('beforeunload', stopSpeech);
+  window.addEventListener('pagehide', stopSpeech);
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  renderFlashcard();
+  renderStudyGuide();
+  buildQuiz('ar2en');
+  buildQuiz('en2ar');
+
+})();
+</script>
+</body>
+</html>
