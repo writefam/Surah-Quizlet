@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 6 · Al-Kāfirūn Vocabulary</title>
+<style>
+  :root{
+    --primary:#2c3e50;
+    --secondary:#34495e;
+    --accent:#e67e22;
+    --bg:#f4f6f8;
+    --card-bg:#ffffff;
+    --correct:#27ae60;
+    --wrong:#e74c3c;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{ margin:0; padding:0; }
+
+  body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color:var(--bg);
+    color:var(--primary);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px;
+    min-height:100vh;
+  }
+
+  h1{
+    font-size:1.6rem;
+    text-align:center;
+    margin:0 0 6px;
+    color:var(--primary);
+    font-weight:700;
+  }
+
+  .subtitle{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:#7f8c8d;
+    text-align:center;
+    margin-bottom:18px;
+  }
+  
+  /* ---------- Back link — inherits .tab look, anchor needs underline removed ---------- */
+  .nav-back{
+    text-decoration:none;
+    margin-left:4px;
+    box-shadow:inset 1px 0 0 #ecf0f1;
+  }
+  
+  .app-container{
+    width:100%;
+    max-width:650px;
+    margin:0 auto;
+    background:var(--card-bg);
+    border-radius:12px;
+    box-shadow:0 6px 22px rgba(44,62,80,0.10);
+    padding:20px;
+  }
+
+  /* ---------- Tabs ---------- */
+  .nav-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:5px;
+    border-bottom:2px solid #ecf0f1;
+    padding-bottom:10px;
+    margin-bottom:18px;
+  }
+  .tab{
+    font-family:inherit;
+    font-size:0.85rem;
+    background:transparent;
+    border:none;
+    color:#7f8c8d;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+    transition:background .2s, color .2s;
+  }
+  .tab:hover{ color:var(--primary); }
+  .tab.active{
+    background:var(--primary);
+    color:#ffffff;
+    border-radius:5px;
+  }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ---------- Generic buttons ---------- */
+  .btn{
+    font-family:inherit;
+    font-size:0.9rem;
+    padding:10px 16px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    transition:opacity .2s, transform .1s;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn:disabled{ opacity:0.45; cursor:not-allowed; }
+  .btn-primary{ background:var(--primary); color:#fff; }
+  .btn-secondary{ background:#ecf0f1; color:var(--secondary); }
+  .btn-accent{ background:var(--accent); color:#fff; }
+
+  /* ---------- Round icon buttons ---------- */
+  .audio-btn, .copy-btn{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:none;
+    font-size:1.2rem;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
+    transition:transform .15s, background .2s;
+  }
+  .audio-btn{ background:var(--primary); color:#fff; }
+  .audio-btn:hover{ background:var(--secondary); }
+  .copy-btn{ background:#ecf0f1; color:var(--secondary); }
+  .copy-btn:hover{ background:#dfe6e9; }
+
+  .audio-btn.small, .copy-btn.small{
+    width:36px;
+    height:36px;
+    font-size:0.95rem;
+  }
+  .audio-btn.small{ background:var(--secondary); }
+
+  @keyframes pulse{
+    0%{ transform:scale(1); }
+    50%{ transform:scale(1.14); }
+    100%{ transform:scale(1); }
+  }
+  .speaking{ animation:pulse 0.9s ease-in-out infinite; }
+
+  /* ---------- FLASHCARDS ---------- */
+  .flashcard-wrap{
+    height:350px;
+    perspective:1000px;
+    margin-bottom:16px;
+  }
+  .flashcard{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-style:preserve-3d;
+    transition:transform 0.6s;
+    cursor:pointer;
+  }
+  .flashcard.flipped{ transform:rotateY(180deg); }
+
+  .card-face{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    text-align:center;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+
+  .card-front{
+    background:linear-gradient(135deg, #ffffff 0%, #ecf0f1 100%);
+    border:2px solid #bdc3c7;
+    gap:18px;
+  }
+  .card-back{
+    background:linear-gradient(135deg, #e8f4f8 0%, #d1e8f0 100%);
+    border:2px solid #a9cce3;
+    transform:rotateY(180deg);
+    gap:10px;
+  }
+
+  .arabic-word{
+    font-size:3.5rem;
+    line-height:1.5;
+    direction:rtl;
+    unicode-bidi:isolate;
+    max-width:100%;
+  }
+  .emoji-big{
+    font-size:2.8rem;
+    line-height:1.1;
+  }
+  .english-word{
+    font-size:1.6rem;
+    font-weight:700;
+    color:var(--secondary);
+  }
+  .desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:0.92rem;
+    line-height:1.45;
+    max-width:92%;
+  }
+  .flip-hint{
+    position:absolute;
+    bottom:14px;
+    left:0;
+    right:0;
+    font-size:0.72rem;
+    color:#95a5a6;
+    letter-spacing:0.05em;
+  }
+
+  .fc-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .fc-progress{
+    font-weight:700;
+    color:var(--secondary);
+    font-size:0.95rem;
+  }
+  .center-row{ text-align:center; }
+
+  /* ---------- QUIZ ---------- */
+  .quiz-score{
+    text-align:center;
+    font-weight:700;
+    color:var(--secondary);
+    margin-bottom:12px;
+    font-size:1rem;
+  }
+  .quiz-prompt{
+    text-align:center;
+    font-weight:700;
+    margin-bottom:14px;
+    color:var(--primary);
+  }
+  .word-line{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .arabic-big{
+    font-size:3rem;
+    line-height:1.5;
+    direction:rtl;
+    unicode-bidi:isolate;
+  }
+  .option-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .option-btn{
+    flex:1 1 auto;
+    min-width:0;
+    padding:12px;
+    border:2px solid #ecf0f1;
+    background:#ffffff;
+    border-radius:8px;
+    font-family:inherit;
+    font-size:1rem;
+    color:var(--secondary);
+    cursor:pointer;
+    text-align:center;
+    transition:border-color .2s, background .2s, color .2s;
+    word-wrap:break-word;
+  }
+  .option-btn:hover:not(:disabled){ border-color:#bdc3c7; }
+  .option-btn:disabled{ cursor:default; }
+  .option-btn.correct{
+    background:#eafaf1;
+    border-color:var(--correct);
+    color:var(--correct);
+    font-weight:700;
+  }
+  .option-btn.wrong{
+    background:#fdecea;
+    border-color:var(--wrong);
+    color:var(--wrong);
+    font-weight:700;
+  }
+  .option-btn.option-ar{
+    direction:rtl;
+    unicode-bidi:isolate;
+    font-size:1.5rem;
+    line-height:1.6;
+  }
+
+  .feedback{
+    text-align:center;
+    font-weight:700;
+    min-height:24px;
+    margin:12px 0;
+    font-size:0.95rem;
+  }
+  .feedback.correct{ color:var(--correct); }
+  .feedback.wrong{ color:var(--wrong); }
+
+  .quiz-controls{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+
+  .quiz-complete{
+    text-align:center;
+    font-weight:700;
+    color:var(--secondary);
+    font-size:1.15rem;
+    padding:22px 12px;
+    background:#f8fbfd;
+    border:2px dashed #a9cce3;
+    border-radius:10px;
+    margin:10px 0;
+    line-height:1.6;
+  }
+  .complete-score{
+    display:inline-block;
+    margin-top:8px;
+    color:var(--correct);
+    font-size:1.05rem;
+  }
+
+  .quiz-meaning{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .quiz-meaning .english-word{ font-size:1.4rem; }
+  .inline-audio{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    justify-content:center;
+  }
+
+  /* ---------- STUDY GUIDE ---------- */
+  .guide-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+  }
+  .guide-title{
+    font-weight:700;
+    color:var(--primary);
+    font-size:1rem;
+  }
+  .guide-list{
+    max-height:450px;
+    overflow-y:auto;
+    padding-right:6px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .guide-item{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    border:1px solid #ecf0f1;
+    border-radius:10px;
+    padding:12px;
+    margin-bottom:10px;
+    background:#fdfdfd;
+  }
+  .guide-emoji{
+    font-size:2rem;
+    line-height:1;
+    flex:0 0 auto;
+    padding-top:4px;
+  }
+  .guide-content{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .arabic-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:4px;
+  }
+  .arabic-text{
+    font-size:1.8rem;
+    line-height:1.6;
+    direction:rtl;
+    unicode-bidi:isolate;
+  }
+  .english-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:4px;
+  }
+  .english-text{
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--secondary);
+  }
+  .guide-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:0.9rem;
+    line-height:1.45;
+  }
+  .hide-details .guide-detail{ display:none; }
+
+  /* ---------- Footer ---------- */
+  .footer{
+    margin-top:22px;
+    padding-top:14px;
+    border-top:1px solid #ecf0f1;
+    font-size:0.8rem;
+    color:#95a5a6;
+    text-align:center;
+    line-height:1.55;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:480px){
+    body{ padding:10px; }
+    h1{ font-size:1.25rem; }
+    .subtitle{ font-size:0.62rem; margin-bottom:12px; }
+    .app-container{ padding:14px; border-radius:10px; }
+    .tab{ font-size:0.72rem; padding:6px 9px; }
+    .nav-tabs{ margin-bottom:14px; }
+
+    .flashcard-wrap{ height:320px; }
+    .arabic-word{ font-size:2.4rem; }
+    .english-word{ font-size:1.3rem; }
+    .emoji-big{ font-size:2.3rem; }
+    .desc{ font-size:0.82rem; }
+
+    .arabic-big{ font-size:2.1rem; }
+    .audio-btn, .copy-btn{ width:42px; height:42px; font-size:1.05rem; }
+    .audio-btn.small, .copy-btn.small{ width:32px; height:32px; font-size:0.85rem; }
+
+    .btn{ font-size:0.82rem; padding:8px 12px; }
+    .option-btn{ padding:9px; font-size:0.9rem; }
+    .option-btn.option-ar{ font-size:1.25rem; }
+    .arabic-text{ font-size:1.5rem; }
+    .english-text{ font-size:1rem; }
+    .guide-desc{ font-size:0.82rem; }
+    .quiz-complete{ font-size:1rem; padding:16px 8px; }
+  }
+</style>
+</head>
+<body>
+  
+  <h1>Al-Kāfirūn · Kind, and Still No</h1>
+  <div class="subtitle">Al-Kāfirūn · Vocabulary Quiz</div>
+
+  <div class="app-container">
+
+    <!-- ============ TABS ============ -->
+    <div class="nav-tabs" role="tablist">
+      <button class="tab active" type="button" data-tab="flashcards">Flashcards</button>
+      <button class="tab" type="button" data-tab="quizA">Quiz (Ar ➔ En)</button>
+      <button class="tab" type="button" data-tab="quizB">Quiz (En ➔ Ar)</button>
+      <button class="tab" type="button" data-tab="guide">Study Guide</button>
+	  <a class="tab nav-back" href="index.html">← All Surahs</a>
+    </div>
+
+    <!-- ============ FLASHCARDS ============ -->
+    <div class="panel active" id="panel-flashcards">
+      <div class="flashcard-wrap">
+        <div class="flashcard" id="flashcard">
+          <div class="card-face card-front">
+            <div class="arabic-word" id="fcArabic">قُلْ</div>
+            <button class="audio-btn" type="button" id="fcAudioFront" aria-label="Play Arabic audio">🔊</button>
+            <div class="flip-hint">Tap card to flip</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="emoji-big" id="fcEmoji">💬</div>
+            <div class="english-word" id="fcEnglish">Say</div>
+            <button class="audio-btn small" type="button" id="fcAudioBack" aria-label="Play English audio">🔊</button>
+            <div class="desc" id="fcDesc"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fc-nav">
+        <button class="btn btn-secondary" type="button" id="fcPrev">‹ Previous</button>
+        <div class="fc-progress" id="fcProgress">1 / 12</div>
+        <button class="btn btn-secondary" type="button" id="fcNext">Next ›</button>
+      </div>
+
+      <div class="center-row">
+        <button class="btn btn-accent" type="button" id="fcShuffle">🔀 Shuffle Deck</button>
+      </div>
+    </div>
+
+    <!-- ============ QUIZ Ar ➔ En ============ -->
+    <div class="panel" id="panel-quizA">
+      <div class="quiz-score" id="scoreA">Score: 0 / 12</div>
+
+      <div id="quizAbody">
+        <div id="promptBoxA">
+          <div class="quiz-prompt">What is the meaning of this word?</div>
+          <div class="word-line" id="wordA"></div>
+        </div>
+
+        <div id="optionsA"></div>
+        <div class="feedback" id="feedbackA"></div>
+
+        <div class="quiz-controls">
+          <button class="btn btn-primary" type="button" id="nextA" disabled>Next Question</button>
+          <button class="btn btn-secondary" type="button" id="restartA">Restart Quiz</button>
+        </div>
+      </div>
+
+      <div class="quiz-complete" id="completeA" style="display:none;"></div>
+    </div>
+
+    <!-- ============ QUIZ En ➔ Ar ============ -->
+    <div class="panel" id="panel-quizB">
+      <div class="quiz-score" id="scoreB">Score: 0 / 12</div>
+
+      <div id="quizBbody">
+        <div id="promptBoxB">
+          <div class="quiz-prompt">Which Arabic word matches this meaning?</div>
+          <div class="word-line" id="wordB"></div>
+        </div>
+
+        <div id="optionsB"></div>
+        <div class="feedback" id="feedbackB"></div>
+
+        <div class="quiz-controls">
+          <button class="btn btn-primary" type="button" id="nextB" disabled>Next Question</button>
+          <button class="btn btn-secondary" type="button" id="restartB">Restart Quiz</button>
+        </div>
+      </div>
+
+      <div class="quiz-complete" id="completeB" style="display:none;"></div>
+    </div>
+
+    <!-- ============ STUDY GUIDE ============ -->
+    <div class="panel" id="panel-guide">
+      <div class="guide-header">
+        <div class="guide-title">All 12 Vocabulary Words</div>
+        <button class="btn btn-accent" type="button" id="guideToggle">Hide Details</button>
+      </div>
+      <div class="guide-list" id="guideList"></div>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="footer">
+      Note: Browser text-to-speech is not perfect for Qur'anic Arabic — some letters and
+      harakāt may sound off. Always verify each word with a qualified teacher or a dedicated
+      Qur'an app. For accurate audio, use the 📋 copy button to copy the word and paste it
+      into your trusted Qur'an application.
+    </div>
+
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     VOCABULARY DATA  (from Week 6 – Al-Kāfirūn, pages 1–2)
+     ========================================================= */
+  var VOCAB = [
+    {
+      id: 1,
+      arabic: "قُلْ",
+      english: "Say",
+      emoji: "💬",
+      description: "An empty speech bubble at his mouth. This word is an order to say it out loud, not to think it quietly."
+    },
+    {
+      id: 2,
+      arabic: "يَا أَيُّهَا",
+      english: "O you!",
+      emoji: "👥",
+      description: "The two men he has turned to face. This is how you call someone before you tell them something."
+    },
+    {
+      id: 3,
+      arabic: "الْكَافِرُونَ",
+      english: "The disbelievers",
+      emoji: "🏮",
+      description: "A lantern with a cloth thrown over it. The root of this word means to cover, and what is covered here is the truth."
+    },
+    {
+      id: 4,
+      arabic: "لَا",
+      english: "No, not",
+      emoji: "✋",
+      description: "A flat palm held up. This word is a stop, and it opens four verses in a row."
+    },
+    {
+      id: 5,
+      arabic: "أَعْبُدُ",
+      english: "I worship",
+      emoji: "🧎",
+      description: "One person alone in sujood. The 'I' on the front means I: one person, me."
+    },
+    {
+      id: 6,
+      arabic: "تَعْبُدُونَ",
+      english: "You all worship",
+      emoji: "🏛️",
+      description: "The carved pillars, not the people. The ending means 'you all'."
+    },
+    {
+      id: 7,
+      arabic: "عَابِدُونَ",
+      english: "Worshipers",
+      emoji: "🙇",
+      description: "A group bowing together. This is not an action word, it is a name for the people who do it."
+    },
+    {
+      id: 8,
+      arabic: "عَبَدْتُمْ",
+      english: "You worshipped",
+      emoji: "🪦",
+      description: "A stone plinth with nothing left standing on it. The ending puts it in the past: you already did."
+    },
+    {
+      id: 9,
+      arabic: "لَكُمْ",
+      english: "For you",
+      emoji: "⬅️",
+      description: "One arm of the signpost, pointing away. Lām means 'for', and kum means 'you all'."
+    },
+    {
+      id: 10,
+      arabic: "دِينُكُمْ",
+      english: "Your religion",
+      emoji: "🛤️",
+      description: "The path leading off toward the pillars. A religion is a road you walk, not a feeling you have."
+    },
+    {
+      id: 11,
+      arabic: "وَلِيَ",
+      english: "And for me",
+      emoji: "➡️",
+      description: "The other arm of the same signpost, pointing the opposite way. Wa means 'and', lī means 'me'."
+    },
+    {
+      id: 12,
+      arabic: "دِينِ",
+      english: "My religion",
+      emoji: "🕌",
+      description: "The masjid standing at the end of the other path."
+    }
+  ];
+
+  /* =========================================================
+     AUDIO ENGINE
+     ========================================================= */
+  var voices = [];
+
+  function loadVoices() {
+    if (!("speechSynthesis" in window)) return;
+    try {
+      voices = window.speechSynthesis.getVoices() || [];
+    } catch (e) {
+      voices = [];
+    }
+  }
+
+  if ("speechSynthesis" in window) {
+    loadVoices();
+    if (typeof window.speechSynthesis.onvoiceschanged !== "undefined") {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }
+
+  function pickVoice(lang) {
+    if (!voices || !voices.length) return null;
+    var target = String(lang).toLowerCase().replace("_", "-");
+    var prefix = target.slice(0, 2);
+    var i;
+
+    for (i = 0; i < voices.length; i++) {
+      var v = voices[i];
+      if (v.lang && String(v.lang).toLowerCase().replace("_", "-") === target) return v;
+    }
+    for (i = 0; i < voices.length; i++) {
+      var v2 = voices[i];
+      if (v2.lang && String(v2.lang).toLowerCase().indexOf(prefix) === 0) return v2;
+    }
+    return null;
+  }
+
+  /* ---- FINAL HARAKAH TRICK (comma method only) ---- */
+  function getTTSText(text, lang) {
+    if (!text) return text;
+    if (lang && String(lang).toLowerCase().indexOf("ar") === 0) {
+      var last = text.charAt(text.length - 1);
+      if (last === "\u064E" || last === "\u064F" || last === "\u0650") {
+        return text + "\u060C";   /* Arabic comma */
+      }
+      if (last === "\u0652") {
+        return text;              /* sukoon → unchanged */
+      }
+    }
+    return text;
+  }
+
+  function clearSpeaking() {
+    var nodes = document.querySelectorAll(".speaking");
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].classList.remove("speaking");
+    }
+  }
+
+  function cancelSpeech() {
+    if ("speechSynthesis" in window) {
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+    }
+    clearSpeaking();
+  }
+
+  function speak(text, lang, btn) {
+    if (!("speechSynthesis" in window)) return;
+
+    cancelSpeech();
+    loadVoices();
+
+    var ttsText = getTTSText(text, lang);
+    var u = new SpeechSynthesisUtterance(ttsText);
+    u.rate = 0.5;
+    u.pitch = 1.0;
+    u.lang = lang;
+
+    var v = pickVoice(lang);
+    if (v) { u.voice = v; }
+
+    if (btn) {
+      btn.classList.add("speaking");
+      u.onend = function () { btn.classList.remove("speaking"); };
+      u.onerror = function () { btn.classList.remove("speaking"); };
+    }
+
+    try {
+      window.speechSynthesis.speak(u);
+    } catch (e) {
+      if (btn) btn.classList.remove("speaking");
+    }
+  }
+
+  /* =========================================================
+     COPY BUTTON
+     ========================================================= */
+  function fallbackCopy(text, cb) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    ta.style.left = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    if (cb) cb();
+  }
+
+  function copyText(text, btn) {
+    var original = "📋";
+    function done() {
+      btn.textContent = "✅";
+      setTimeout(function () {
+        if (btn) btn.textContent = original;
+      }, 1500);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function () {
+        fallbackCopy(text, done);
+      });
+    } else {
+      fallbackCopy(text, done);
+    }
+  }
+
+  /* =========================================================
+     ELEMENT HELPERS
+     ========================================================= */
+  function makeAudioBtn(text, lang, small) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "audio-btn" + (small ? " small" : "");
+    b.textContent = "🔊";
+    b.setAttribute("aria-label", "Play audio");
+    b.addEventListener("click", function (e) {
+      e.stopPropagation();
+      speak(text, lang, b);
+    });
+    return b;
+  }
+
+  function makeCopyBtn(text, small) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "copy-btn" + (small ? " small" : "");
+    b.textContent = "📋";
+    b.setAttribute("aria-label", "Copy Arabic text");
+    b.addEventListener("click", function (e) {
+      e.stopPropagation();
+      copyText(text, b);
+    });
+    return b;
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function $(id) { return document.getElementById(id); }
+
+  /* =========================================================
+     TABS
+     ========================================================= */
+  var tabs = document.querySelectorAll(".tab");
+  var panels = document.querySelectorAll(".panel");
+
+  function switchTab(name) {
+    cancelSpeech();
+    var i;
+    for (i = 0; i < tabs.length; i++) {
+      tabs[i].classList.toggle("active", tabs[i].getAttribute("data-tab") === name);
+    }
+    for (i = 0; i < panels.length; i++) {
+      panels[i].classList.toggle("active", panels[i].id === "panel-" + name);
+    }
+  }
+
+  for (var t = 0; t < tabs.length; t++) {
+    (function (tab) {
+      tab.addEventListener("click", function () {
+        switchTab(tab.getAttribute("data-tab"));
+      });
+    })(tabs[t]);
+  }
+
+  /* =========================================================
+     FLASHCARDS
+     ========================================================= */
+  var deck = VOCAB.slice();
+  var current = 0;
+  var flipped = false;
+
+  var flashcardEl = $("flashcard");
+
+  function renderFlashcard() {
+    var item = deck[current];
+    $("fcArabic").textContent = item.arabic;
+    $("fcEmoji").textContent = item.emoji;
+    $("fcEnglish").textContent = item.english;
+    $("fcDesc").textContent = item.description;
+    $("fcProgress").textContent = (current + 1) + " / " + deck.length;
+    flashcardEl.classList.toggle("flipped", flipped);
+  }
+
+  flashcardEl.addEventListener("click", function () {
+    flipped = !flipped;
+    flashcardEl.classList.toggle("flipped", flipped);
+  });
+
+  $("fcAudioFront").addEventListener("click", function (e) {
+    e.stopPropagation();
+    speak(deck[current].arabic, "ar-SA", this);
+  });
+
+  $("fcAudioBack").addEventListener("click", function (e) {
+    e.stopPropagation();
+    speak(deck[current].english, "en-US", this);
+  });
+
+  $("fcPrev").addEventListener("click", function () {
+    cancelSpeech();
+    current = (current - 1 + deck.length) % deck.length;
+    flipped = false;
+    renderFlashcard();
+  });
+
+  $("fcNext").addEventListener("click", function () {
+    cancelSpeech();
+    current = (current + 1) % deck.length;
+    flipped = false;
+    renderFlashcard();
+  });
+
+  $("fcShuffle").addEventListener("click", function () {
+    cancelSpeech();
+    deck = shuffle(deck);
+    current = 0;
+    flipped = false;
+    renderFlashcard();
+  });
+
+  /* =========================================================
+     QUIZZES
+     ========================================================= */
+  function buildQuiz() {
+    var questions = shuffle(VOCAB).map(function (item) {
+      var others = VOCAB.filter(function (v) { return v.id !== item.id; });
+      var distractors = shuffle(others).slice(0, 3);
+      var options = shuffle([item].concat(distractors));
+      return { item: item, options: options };
+    });
+    return {
+      questions: questions,
+      index: 0,
+      score: 0,
+      answered: false
+    };
+  }
+
+  var quizA = buildQuiz();
+  var quizB = buildQuiz();
+
+  /* ---------- Renderers ---------- */
+
+  function renderQuizA() {
+    var q = quizA;
+    var cur = q.questions[q.index];
+
+    $("scoreA").textContent = "Score: " + q.score + " / " + q.questions.length;
+
+    var wordBox = $("wordA");
+    wordBox.innerHTML = "";
+
+    var arSpan = document.createElement("span");
+    arSpan.className = "arabic-big";
+    arSpan.textContent = cur.item.arabic;
+    wordBox.appendChild(arSpan);
+    wordBox.appendChild(makeAudioBtn(cur.item.arabic, "ar-SA", false));
+    wordBox.appendChild(makeCopyBtn(cur.item.arabic, false));
+
+    var optBox = $("optionsA");
+    optBox.innerHTML = "";
+
+    cur.options.forEach(function (opt, idx) {
+      var row = document.createElement("div");
+      row.className = "option-row";
+
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "option-btn";
+      btn.textContent = opt.english;
+      btn.addEventListener("click", function () {
+        handleAnswer("A", idx, btn);
+      });
+
+      row.appendChild(btn);
+      row.appendChild(makeAudioBtn(opt.english, "en-US", true));
+      optBox.appendChild(row);
+    });
+
+    $("feedbackA").textContent = "";
+    $("feedbackA").className = "feedback";
+    $("nextA").disabled = true;
+  }
+
+  function renderQuizB() {
+    var q = quizB;
+    var cur = q.questions[q.index];
+
+    $("scoreB").textContent = "Score: " + q.score + " / " + q.questions.length;
+
+    var wordBox = $("wordB");
+    wordBox.innerHTML = "";
+
+    var wrap = document.createElement("div");
+    wrap.className = "quiz-meaning";
+
+    var emoji = document.createElement("div");
+    emoji.className = "emoji-big";
+    emoji.textContent = cur.item.emoji;
+    wrap.appendChild(emoji);
+
+    var enRow = document.createElement("div");
+    enRow.className = "inline-audio";
+    var enSpan = document.createElement("span");
+    enSpan.className = "english-word";
+    enSpan.textContent = cur.item.english;
+    enRow.appendChild(enSpan);
+    enRow.appendChild(makeAudioBtn(cur.item.english, "en-US", false));
+    wrap.appendChild(enRow);
+
+    var desc = document.createElement("div");
+    desc.className = "desc";
+    desc.textContent = cur.item.description;
+    wrap.appendChild(desc);
+
+    wordBox.appendChild(wrap);
+
+    var optBox = $("optionsB");
+    optBox.innerHTML = "";
+
+    cur.options.forEach(function (opt, idx) {
+      var row = document.createElement("div");
+      row.className = "option-row";
+
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "option-btn option-ar";
+      btn.textContent = opt.arabic;
+      btn.addEventListener("click", function () {
+        handleAnswer("B", idx, btn);
+      });
+
+      row.appendChild(btn);
+      row.appendChild(makeAudioBtn(opt.arabic, "ar-SA", true));
+      optBox.appendChild(row);
+    });
+
+    $("feedbackB").textContent = "";
+    $("feedbackB").className = "feedback";
+    $("nextB").disabled = true;
+  }
+
+  /* ---------- Answer handling ---------- */
+
+  function handleAnswer(mode, chosenIdx, btnEl) {
+    var q = (mode === "A") ? quizA : quizB;
+    if (q.answered) return;
+
+    q.answered = true;
+
+    var cur = q.questions[q.index];
+    var isCorrect = cur.options[chosenIdx].id === cur.item.id;
+
+    if (isCorrect) { q.score++; }
+
+    var buttons = document.querySelectorAll("#options" + mode + " .option-btn");
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].disabled = true;
+      if (cur.options[i].id === cur.item.id) {
+        buttons[i].classList.add("correct");
+      } else if (i === chosenIdx) {
+        buttons[i].classList.add("wrong");
+      }
+    }
+
+    var fb = $("feedback" + mode);
+    if (isCorrect) {
+      fb.textContent = "Correct! ✅";
+      fb.className = "feedback correct";
+    } else {
+      var correctText = (mode === "A") ? cur.item.english : cur.item.arabic;
+      fb.textContent = "Incorrect. The correct answer is: " + correctText;
+      fb.className = "feedback wrong";
+    }
+
+    $("score" + mode).textContent = "Score: " + q.score + " / " + q.questions.length;
+
+    var isLast = (q.index === q.questions.length - 1);
+
+    if (isLast) {
+      $("promptBox" + mode).style.display = "none";
+      $("options" + mode).style.display = "none";
+      $("next" + mode).style.display = "none";
+
+      var done = $("complete" + mode);
+      done.innerHTML = "";
+      done.appendChild(document.createTextNode("Quiz Completed! 🎉"));
+      done.appendChild(document.createElement("br"));
+      var scoreLine = document.createElement("span");
+      scoreLine.className = "complete-score";
+      scoreLine.textContent = "Final score: " + q.score + " / " + q.questions.length;
+      done.appendChild(scoreLine);
+      done.style.display = "block";
+    } else {
+      $("next" + mode).disabled = false;
+    }
+  }
+
+  function startQuiz(mode) {
+    cancelSpeech();
+    var fresh = buildQuiz();
+    if (mode === "A") { quizA = fresh; } else { quizB = fresh; }
+
+    $("promptBox" + mode).style.display = "";
+    $("options" + mode).style.display = "";
+    $("next" + mode).style.display = "";
+    $("next" + mode).disabled = true;
+    $("complete" + mode).style.display = "none";
+    $("complete" + mode).innerHTML = "";
+    $("feedback" + mode).textContent = "";
+    $("feedback" + mode).className = "feedback";
+
+    if (mode === "A") { renderQuizA(); } else { renderQuizB(); }
+  }
+
+  $("nextA").addEventListener("click", function () {
+    cancelSpeech();
+    if (quizA.index < quizA.questions.length - 1) {
+      quizA.index++;
+      quizA.answered = false;
+      renderQuizA();
+    }
+  });
+
+  $("nextB").addEventListener("click", function () {
+    cancelSpeech();
+    if (quizB.index < quizB.questions.length - 1) {
+      quizB.index++;
+      quizB.answered = false;
+      renderQuizB();
+    }
+  });
+
+  $("restartA").addEventListener("click", function () { startQuiz("A"); });
+  $("restartB").addEventListener("click", function () { startQuiz("B"); });
+
+  /* =========================================================
+     STUDY GUIDE
+     ========================================================= */
+  function renderGuide() {
+    var list = $("guideList");
+    list.innerHTML = "";
+
+    VOCAB.forEach(function (item) {
+      var row = document.createElement("div");
+      row.className = "guide-item";
+
+      var emoji = document.createElement("div");
+      emoji.className = "guide-emoji";
+      emoji.textContent = item.emoji;
+
+      var content = document.createElement("div");
+      content.className = "guide-content";
+
+      /* Arabic row */
+      var arRow = document.createElement("div");
+      arRow.className = "arabic-row";
+      var arSpan = document.createElement("span");
+      arSpan.className = "arabic-text";
+      arSpan.textContent = item.arabic;
+      arRow.appendChild(arSpan);
+      arRow.appendChild(makeAudioBtn(item.arabic, "ar-SA", true));
+      arRow.appendChild(makeCopyBtn(item.arabic, true));
+      content.appendChild(arRow);
+
+      /* English row (hideable) */
+      var enRow = document.createElement("div");
+      enRow.className = "english-row guide-detail";
+      var enSpan = document.createElement("span");
+      enSpan.className = "english-text";
+      enSpan.textContent = item.english;
+      enRow.appendChild(enSpan);
+      enRow.appendChild(makeAudioBtn(item.english, "en-US", true));
+      content.appendChild(enRow);
+
+      /* Description (hideable) */
+      var desc = document.createElement("div");
+      desc.className = "guide-desc guide-detail";
+      desc.textContent = item.description;
+      content.appendChild(desc);
+
+      row.appendChild(emoji);
+      row.appendChild(content);
+      list.appendChild(row);
+    });
+  }
+
+  $("guideToggle").addEventListener("click", function () {
+    var list = $("guideList");
+    var hidden = list.classList.toggle("hide-details");
+    this.textContent = hidden ? "Show Details" : "Hide Details";
+  });
+
+  /* =========================================================
+     GLOBAL CLEANUP
+     ========================================================= */
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) cancelSpeech();
+  });
+  window.addEventListener("pagehide", cancelSpeech);
+  window.addEventListener("beforeunload", cancelSpeech);
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  renderFlashcard();
+  renderGuide();
+  startQuiz("A");
+  startQuiz("B");
+
+})();
+</script>
+</body>
+</html>

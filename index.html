@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qur'an Vocabulary Quizzes</title>
+<style>
+  :root{
+    --primary:#2c3e50;
+    --secondary:#34495e;
+    --accent:#e67e22;
+    --bg:#f4f6f8;
+    --card-bg:#ffffff;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+
+  body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color:var(--bg);
+    color:var(--primary);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px;
+    min-height:100vh;
+  }
+
+  h1{
+    font-size:1.6rem;
+    text-align:center;
+    margin:0 0 6px;
+    font-weight:700;
+    color:var(--primary);
+  }
+
+  .subtitle{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:#7f8c8d;
+    text-align:center;
+    margin-bottom:18px;
+  }
+
+  .app-container{
+    width:100%;
+    max-width:650px;
+    margin:0 auto;
+    background:var(--card-bg);
+    border-radius:12px;
+    box-shadow:0 6px 22px rgba(44,62,80,0.10);
+    padding:20px;
+  }
+
+  /* ---------- List header ---------- */
+  .list-header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    padding-bottom:10px;
+    border-bottom:2px solid #ecf0f1;
+    margin-bottom:14px;
+  }
+  .list-title{ font-weight:700; font-size:1rem; color:var(--primary); }
+  .list-count{
+    font-size:0.72rem;
+    color:#95a5a6;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    white-space:nowrap;
+  }
+
+  /* ---------- Surah links ---------- */
+  .surah-list{ list-style:none; margin:0; padding:0; }
+
+  .surah-link{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border:1px solid #ecf0f1;
+    border-radius:10px;
+    margin-bottom:10px;
+    background:#fdfdfd;
+    text-decoration:none;
+    color:inherit;
+    transition:border-color .2s, background .2s, transform .1s;
+  }
+  .surah-link:hover{ border-color:#a9cce3; background:#f5fbfd; }
+  .surah-link:active{ transform:scale(0.99); }
+
+  .surah-num{
+    flex:0 0 auto;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:var(--primary);
+    color:#ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.82rem;
+    font-weight:700;
+  }
+
+  .surah-info{
+    flex:1 1 auto;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .surah-name{
+    font-size:1rem;
+    font-weight:700;
+    color:var(--primary);
+    line-height:1.5;
+  }
+
+  .surah-arabic{
+    font-size:1.05rem;
+    font-weight:400;
+    color:var(--secondary);
+    direction:rtl;
+    unicode-bidi:isolate;
+    margin-left:8px;
+  }
+
+  .surah-meta{
+    font-size:0.78rem;
+    color:#95a5a6;
+  }
+
+  .surah-arrow{
+    flex:0 0 auto;
+    color:var(--accent);
+    font-size:1.1rem;
+    font-weight:700;
+  }
+
+  .coming-soon{
+    text-align:center;
+    font-size:0.8rem;
+    color:#bdc3c7;
+    font-style:italic;
+    padding:12px 0 2px;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer{
+    margin-top:22px;
+    padding-top:14px;
+    border-top:1px solid #ecf0f1;
+    font-size:0.8rem;
+    color:#95a5a6;
+    text-align:center;
+    line-height:1.55;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:480px){
+    body{ padding:10px; }
+    h1{ font-size:1.25rem; }
+    .subtitle{ font-size:0.62rem; margin-bottom:12px; }
+    .app-container{ padding:14px; border-radius:10px; }
+
+    .surah-link{ padding:10px 11px; gap:10px; }
+    .surah-num{ width:32px; height:32px; font-size:0.75rem; }
+    .surah-name{ font-size:0.92rem; }
+    .surah-arabic{ font-size:0.95rem; margin-left:6px; }
+    .surah-meta{ font-size:0.72rem; }
+  }
+</style>
+</head>
+<body>
+
+  <h1>Qur'an Vocabulary Quizzes</h1>
+  <div class="subtitle">Word-by-word study · Flashcards &amp; Quizzes</div>
+
+  <div class="app-container">
+
+    <div class="list-header">
+      <div class="list-title">Available Surahs</div>
+      <div class="list-count" id="listCount"></div>
+    </div>
+
+    <ul class="surah-list" id="surahList"></ul>
+
+    <div class="coming-soon">More surahs coming soon, in shā’ Allāh</div>
+
+    <div class="footer">
+      Pick a surah to begin. Each quiz includes flashcards, two quiz modes
+      (Arabic ➔ English and English ➔ Arabic), and a study guide with
+      audio playback and copy buttons.
+    </div>
+
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     ADD NEW SURAHS HERE
+     ---------------------------------------------------------
+       number : short label inside the circle (e.g. "07")
+       name   : English / transliterated surah name
+       arabic : Arabic name (optional — use "" to hide)
+       meta   : small grey line under the name
+       file   : the quiz HTML file in this same folder
+     ========================================================= */
+  var SURAHS = [
+    {
+      number: "1",
+      name: "An-Nās",
+      arabic: "النَّاس",
+      meta: "Surah 114 · 12 words",
+      file: "Surah-AnNaas-Practice.html"
+    },
+    {
+      number: "2",
+      name: "Al-Falaq",
+      arabic: "الْفَلَق",
+      meta: "Surah 113 · 12 words",
+      file: "Surah-AlFalaq-Practice.html"
+    },
+    {
+      number: "3",
+      name: "Al-Ikhlāṣ",
+      arabic: "الْإِخْلَاص",
+      meta: "Surah 112 · 11 words",
+      file: "Surah-AlIkhlas-Practice.html"
+    },
+    {
+      number: "4",
+      name: "Al-Masad",
+      arabic: "الْمَسَد",
+      meta: "Surah 111 · 12 words",
+      file: "Surah-Al-Masad-Practice.html"
+    },
+    {
+      number: "5",
+      name: "An-Naṣr",
+      arabic: "النَّصْر",
+      meta: "Surah 110 · 12 words",
+      file: "Surah-AnNasr-Practice.html"
+    },
+	{
+      number: "6",
+      name: "Al-Kāfirūn",
+      arabic: "الْكَافِرُونَ",
+      meta: "Surah 109 · 12 words",
+      file: "Surah-Al-Kafirun-Practice.html"
+    }	
+    /* ---------- copy this block for each new surah ----------
+    ,{
+      number: "07",
+      name: "An-Naṣr",
+      arabic: "النَّصْر",
+      meta: "Week 7 · 12 words",
+      file: "an-nasr-week7.html"
+    }
+    --------------------------------------------------------- */
+  ];
+
+  var list = document.getElementById("surahList");
+  var countEl = document.getElementById("listCount");
+
+  SURAHS.forEach(function (s) {
+    var li = document.createElement("li");
+
+    var a = document.createElement("a");
+    a.className = "surah-link";
+    a.href = s.file;
+
+    var num = document.createElement("span");
+    num.className = "surah-num";
+    num.textContent = s.number;
+
+    var info = document.createElement("span");
+    info.className = "surah-info";
+
+    var name = document.createElement("span");
+    name.className = "surah-name";
+    name.textContent = s.name;
+
+    if (s.arabic) {
+      var ar = document.createElement("span");
+      ar.className = "surah-arabic";
+      ar.textContent = s.arabic;
+      name.appendChild(ar);
+    }
+    info.appendChild(name);
+
+    if (s.meta) {
+      var meta = document.createElement("span");
+      meta.className = "surah-meta";
+      meta.textContent = s.meta;
+      info.appendChild(meta);
+    }
+
+    var arrow = document.createElement("span");
+    arrow.className = "surah-arrow";
+    arrow.textContent = "→";
+
+    a.appendChild(num);
+    a.appendChild(info);
+    a.appendChild(arrow);
+    li.appendChild(a);
+    list.appendChild(li);
+  });
+
+  countEl.textContent = SURAHS.length + (SURAHS.length === 1 ? " quiz" : " quizzes");
+
+})();
+</script>
+</body>
+</html>

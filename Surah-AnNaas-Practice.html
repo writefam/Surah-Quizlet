@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fortress of Refuge · Surah An-Nas Vocabulary</title>
+<style>
+  :root{
+    --primary:#2c3e50;
+    --secondary:#34495e;
+    --accent:#e67e22;
+    --bg:#f4f6f8;
+    --card-bg:#ffffff;
+    --correct:#27ae60;
+    --wrong:#e74c3c;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:var(--bg);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+  }
+
+  h1.app-title{
+    font-size:1.75rem;
+    color:var(--primary);
+    text-align:center;
+    margin:0 0 6px 0;
+    letter-spacing:.5px;
+  }
+  .subtitle{
+    text-transform:uppercase;
+    letter-spacing:1.6px;
+    font-size:.72rem;
+    font-weight:700;
+    color:#7f8c8d;
+    text-align:center;
+    margin-bottom:18px;
+  }
+  
+  /* ---------- Back link — inherits .tab look, anchor needs underline removed ---------- */
+  .nav-back{
+    text-decoration:none;
+    margin-left:4px;
+    box-shadow:inset 1px 0 0 #ecf0f1;
+  }
+  
+  .app-container{
+    width:100%;
+    max-width:650px;
+    background:var(--card-bg);
+    border-radius:12px;
+    box-shadow:0 6px 22px rgba(44,62,80,.13);
+    padding:20px;
+    margin:0 auto;
+  }
+
+  .nav-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+    border-bottom:2px solid #ecf0f1;
+    padding-bottom:10px;
+    margin-bottom:18px;
+  }
+  .tab-btn{
+    font-family:inherit;
+    font-size:.88rem;
+    font-weight:600;
+    border:none;
+    background:transparent;
+    color:#7f8c8d;
+    padding:8px 14px;
+    border-radius:5px;
+    cursor:pointer;
+    transition:background .2s, color .2s;
+  }
+  .tab-btn:hover{ background:#f4f6f8; }
+  .tab-btn.active{ background:var(--primary); color:#fff; }
+
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .btn{
+    font-family:inherit;
+    font-size:.92rem;
+    font-weight:600;
+    padding:10px 18px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    transition:filter .2s, background .2s;
+  }
+  .btn.primary{ background:var(--primary); color:#fff; }
+  .btn.primary:disabled{ background:#bdc3c7; cursor:not-allowed; }
+  .btn.ghost{ background:#fff; color:var(--secondary); border:2px solid #d5dbdf; }
+  .btn.accent{ background:var(--accent); color:#fff; }
+  .btn:hover:not(:disabled){ filter:brightness(1.1); }
+
+  .audio-btn{
+    width:48px; height:48px;
+    border-radius:50%;
+    border:none;
+    background:var(--primary);
+    color:#fff;
+    font-size:1.25rem;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
+    transition:background .2s, transform .2s;
+    line-height:1;
+  }
+  .audio-btn:hover{ background:var(--accent); }
+  .audio-btn.small{ width:36px; height:36px; font-size:.95rem; }
+  .audio-btn.copy{ background:#7f8c8d; }
+  .audio-btn.copy:hover{ background:var(--accent); }
+
+  @keyframes pulseSpeak{
+    0%{ transform:scale(1); }
+    50%{ transform:scale(1.16); }
+    100%{ transform:scale(1); }
+  }
+  .speaking{ animation:pulseSpeak .6s ease-in-out infinite; }
+
+  .flashcard-wrap{
+    height:350px;
+    perspective:1000px;
+    margin-bottom:16px;
+  }
+  .flashcard{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-style:preserve-3d;
+    transition:transform .6s;
+    cursor:pointer;
+  }
+  .flashcard.flipped{ transform:rotateY(180deg); }
+
+  .card-face{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    text-align:center;
+  }
+  .card-front{
+    background:linear-gradient(135deg,#ffffff 0%,#ecf0f1 100%);
+    border:2px solid #bdc3c7;
+  }
+  .card-back{
+    background:linear-gradient(135deg,#e8f4f8 0%,#d1e8f0 100%);
+    border:2px solid #a9cce3;
+    transform:rotateY(180deg);
+  }
+
+  .arabic-big{
+    font-size:3.5rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    color:var(--primary);
+    line-height:1.5;
+  }
+  .card-front .audio-btn{ margin-top:14px; }
+  .flip-hint{
+    position:absolute;
+    bottom:12px; left:0; right:0;
+    font-size:.72rem;
+    letter-spacing:.6px;
+    color:#95a5a6;
+  }
+
+  .fc-emoji{ font-size:3rem; line-height:1.1; margin-bottom:6px; }
+  .fc-english{ font-size:1.6rem; font-weight:700; color:var(--primary); margin-bottom:8px; }
+  .fc-desc{ font-style:italic; color:#7f8c8d; font-size:.9rem; margin-top:10px; max-width:92%; }
+
+  .fc-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .fc-progress{
+    font-weight:700;
+    color:var(--secondary);
+    font-size:.95rem;
+  }
+  .center-row{ text-align:center; }
+
+  .score-line{
+    text-align:center;
+    font-weight:700;
+    color:var(--secondary);
+    font-size:1.05rem;
+    margin-bottom:8px;
+  }
+  .prompt{
+    text-align:center;
+    font-weight:700;
+    color:var(--secondary);
+    margin:6px 0 14px;
+  }
+  .prompt-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  .prompt-row .arabic-big{ font-size:3rem; }
+
+  .prompt-box{
+    text-align:center;
+    margin-bottom:20px;
+    padding:16px 14px;
+    background:#f8fafb;
+    border-radius:10px;
+    border:1px solid #ecf0f1;
+  }
+  .q-emoji{ font-size:2.6rem; line-height:1.2; }
+  .q-en{
+    font-size:1.25rem;
+    font-weight:700;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:4px;
+  }
+  .q-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:.88rem;
+    margin-top:8px;
+  }
+
+  .option-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .option-btn{
+    flex:1 1 auto;
+    font-family:inherit;
+    font-size:1rem;
+    padding:12px 14px;
+    border:2px solid #d5dbdf;
+    background:#fff;
+    border-radius:8px;
+    color:var(--secondary);
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .option-btn:hover:not(:disabled){ border-color:var(--primary); background:#f8fafb; }
+  .option-btn:disabled{ cursor:default; }
+  .option-btn.correct{
+    border-color:var(--correct);
+    background:#eafaf1;
+    color:var(--correct);
+    font-weight:700;
+  }
+  .option-btn.wrong{
+    border-color:var(--wrong);
+    background:#fdecea;
+    color:var(--wrong);
+    font-weight:700;
+  }
+  .option-btn.rtl{
+    direction:rtl;
+    unicode-bidi:isolate;
+    font-size:1.5rem;
+    text-align:right;
+    line-height:1.7;
+  }
+
+  .feedback{
+    text-align:center;
+    font-weight:600;
+    min-height:1.3em;
+    margin:12px 0;
+    font-size:.95rem;
+  }
+  .feedback.correct{ color:var(--correct); }
+  .feedback.wrong{ color:var(--wrong); }
+
+  .btn-row{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+
+  .done-box{
+    text-align:center;
+    padding:30px 16px;
+  }
+  .done-emoji{ font-size:3rem; margin-bottom:8px; }
+  .done-box h2{ color:var(--primary); margin:6px 0 10px; }
+  .done-box p{ color:var(--secondary); font-size:1.05rem; }
+
+  .guide-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+  .guide-title{ font-weight:700; color:var(--primary); }
+  .guide-list{
+    max-height:450px;
+    overflow-y:auto;
+    padding-right:4px;
+  }
+  .guide-item{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px;
+    border:1px solid #ecf0f1;
+    border-radius:10px;
+    margin-bottom:10px;
+    background:#fff;
+  }
+  .guide-emoji{ font-size:1.9rem; line-height:1.2; flex:0 0 auto; }
+  .guide-content{ flex:1 1 auto; min-width:0; }
+  .guide-arabic{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .guide-arabic .g-ar{
+    font-size:1.8rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    color:var(--primary);
+    line-height:1.6;
+  }
+  .guide-english{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+  .guide-english span{ font-size:1.1rem; font-weight:700; color:var(--secondary); }
+  .guide-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:.88rem;
+    margin-top:6px;
+  }
+  .guide-list.hide-details .guide-english,
+  .guide-list.hide-details .guide-desc{ display:none; }
+
+  .app-footer{
+    margin-top:22px;
+    padding-top:14px;
+    border-top:1px solid #ecf0f1;
+    font-size:.8rem;
+    color:#95a5a6;
+    text-align:center;
+    line-height:1.5;
+  }
+  .app-footer p{ margin:0; }
+
+  @media (max-width:480px){
+    body{ padding:10px; }
+    .app-container{ padding:14px; }
+    h1.app-title{ font-size:1.35rem; }
+    .subtitle{ font-size:.65rem; letter-spacing:1.1px; }
+    .flashcard-wrap{ height:320px; }
+    .arabic-big{ font-size:2.5rem; }
+    .prompt-row .arabic-big{ font-size:2.3rem; }
+    .fc-english{ font-size:1.3rem; }
+    .fc-emoji{ font-size:2.4rem; }
+    .btn{ padding:8px 12px; font-size:.82rem; }
+    .tab-btn{ font-size:.78rem; padding:7px 10px; }
+    .audio-btn{ width:42px; height:42px; font-size:1.05rem; }
+    .audio-btn.small{ width:32px; height:32px; font-size:.85rem; }
+    .option-btn{ font-size:.9rem; padding:10px; }
+    .option-btn.rtl{ font-size:1.25rem; }
+    .guide-arabic .g-ar{ font-size:1.5rem; }
+    .guide-english span{ font-size:1rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="app-title">The Fortress of Refuge</h1>
+<div class="subtitle">Surah An-Nas · Vocabulary Practice</div>
+
+<div class="app-container">
+
+  <!-- ============ TABS ============ -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-tab="flashcards">Flashcards</button>
+    <button class="tab-btn" data-tab="quiz1">Quiz (Ar ➔ En)</button>
+    <button class="tab-btn" data-tab="quiz2">Quiz (En ➔ Ar)</button>
+    <button class="tab-btn" data-tab="guide">Study Guide</button>
+    <a class="tab nav-back" href="index.html">← All Surahs</a>
+  </div>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <div class="tab-panel active" id="tab-flashcards">
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" data-action="flip">
+        <div class="card-face card-front">
+          <div class="arabic-big" id="fcArabic">قُلْ</div>
+          <button class="audio-btn" id="fcAudioFront" data-action="speak" data-lang="ar-SA" data-text="قُلْ" title="Listen">🔊</button>
+          <div class="flip-hint">Tap card to flip</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="fc-emoji" id="fcEmoji">💬</div>
+          <div class="fc-english" id="fcEnglish">Say</div>
+          <button class="audio-btn small" id="fcAudioBack" data-action="speak" data-lang="en-US" data-text="Say" title="Listen">🔊</button>
+          <div class="fc-desc" id="fcDesc"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-nav">
+      <button class="btn ghost" id="fcPrev">← Previous</button>
+      <span class="fc-progress" id="fcProgress">1 / 12</span>
+      <button class="btn ghost" id="fcNext">Next →</button>
+    </div>
+
+    <div class="center-row">
+      <button class="btn accent" id="fcShuffle">🔀 Shuffle Deck</button>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ Ar ➔ En ============ -->
+  <div class="tab-panel" id="tab-quiz1">
+    <div class="score-line" id="q1Score">Score: 0 / 12</div>
+
+    <div id="q1Area">
+      <p class="prompt">What is the meaning of this word?</p>
+      <div class="prompt-row">
+        <span class="arabic-big" id="q1Word"></span>
+        <button class="audio-btn" id="q1Audio" data-action="speak" data-lang="ar-SA" data-text="" title="Listen">🔊</button>
+        <button class="audio-btn copy" id="q1Copy" data-action="copy" data-text="" title="Copy Arabic">📋</button>
+      </div>
+      <div id="q1Options"></div>
+      <div class="feedback" id="q1Feedback"></div>
+      <div class="btn-row">
+        <button class="btn primary" id="q1Next" disabled>Next Question</button>
+        <button class="btn ghost" id="q1Restart">Restart Quiz</button>
+      </div>
+    </div>
+
+    <div class="done-box" id="q1Done" style="display:none;"></div>
+  </div>
+
+  <!-- ============ QUIZ En ➔ Ar ============ -->
+  <div class="tab-panel" id="tab-quiz2">
+    <div class="score-line" id="q2Score">Score: 0 / 12</div>
+
+    <div id="q2Area">
+      <p class="prompt">Which Arabic word matches this meaning?</p>
+      <div class="prompt-box">
+        <div class="q-emoji" id="q2Emoji"></div>
+        <div class="q-en">
+          <span id="q2English"></span>
+          <button class="audio-btn small" id="q2AudioEn" data-action="speak" data-lang="en-US" data-text="" title="Listen">🔊</button>
+        </div>
+        <div class="q-desc" id="q2Desc"></div>
+      </div>
+      <div id="q2Options"></div>
+      <div class="feedback" id="q2Feedback"></div>
+      <div class="btn-row">
+        <button class="btn primary" id="q2Next" disabled>Next Question</button>
+        <button class="btn ghost" id="q2Restart">Restart Quiz</button>
+      </div>
+    </div>
+
+    <div class="done-box" id="q2Done" style="display:none;"></div>
+  </div>
+
+  <!-- ============ STUDY GUIDE ============ -->
+  <div class="tab-panel" id="tab-guide">
+    <div class="guide-header">
+      <span class="guide-title">All 12 Vocabulary Words</span>
+      <button class="btn accent" id="guideToggle">Hide Details</button>
+    </div>
+    <div class="guide-list" id="guideList"></div>
+  </div>
+
+  <footer class="app-footer">
+    <p>
+      ⚠️ Browser text-to-speech is not perfect for Qur'anic Arabic. Please verify your
+      pronunciation with a teacher or a dedicated Qur'an app. For accurate audio, tap the
+      📋 copy button and paste the word into your trusted Qur'an app.
+    </p>
+  </footer>
+
+</div>
+
+<script>
+/* =======================================================================
+   DATA — 12 vocabulary words from Surah An-Nas (Monarch Academy, Week One)
+   ======================================================================= */
+const VOCAB = [
+  { id:1,  arabic:'قُلْ',          english:'Say',                          emoji:'💬', description:'The bubble is words leaving your mouth. This word is an order — say it out loud.' },
+  { id:2,  arabic:'أعُوْذُ',        english:'I seek refuge',                emoji:'🛏️', description:'The canopy over her bed. Refuge means shelter and protection — you run under Allah\u2019s cover; you do not build it yourself.' },
+  { id:3,  arabic:'رَبِّ',          english:'Lord',                         emoji:'🪴', description:'Think of gardening: a caretaker grows a seed from its first day to its last. Your Lord is the One who takes care of you from your beginning to your completion.' },
+  { id:4,  arabic:'النَّاسِ',        english:'Mankind, the people',          emoji:'👨‍👩‍👦', description:'All people — you, your family, everyone.' },
+  { id:5,  arabic:'مَلِكِ',         english:'King',                         emoji:'👑', description:'A crown. A king owns and rules, and Allah is the King of all people.' },
+  { id:6,  arabic:'إِلَٰهِ',         english:'God',                          emoji:'🕋', description:'The Kaaba we all turn to. A king rules you and a lord takes care of you; your God is the One you worship.' },
+  { id:7,  arabic:'شَرِّ',          english:'Evil',                         emoji:'🌵', description:'Thorns on a branch. You do not see the harm until it cuts you — that is what evil is like.' },
+  { id:8,  arabic:'الْوَسْوَاسِ',    english:'The Whisperer',                emoji:'🤫', description:'A sly figure with his hand cupped at his mouth. He never shouts; he whispers.' },
+  { id:9,  arabic:'الْخَنَّاسِ',     english:'The one who retreats and hides', emoji:'🚪', description:'The same figure ducking behind the wardrobe. When you remember Allah, he runs and hides.' },
+  { id:10, arabic:'يُوَسْوِسُ',      english:'He whispers',                  emoji:'👂', description:'A line of whisper travelling to an ear. You cannot see it, but it reaches you.' },
+  { id:11, arabic:'صُدُورِ',        english:'Chests (where hearts live)',   emoji:'🫀', description:'The heart inside the girl\u2019s own chest. That is where the whisper tries to land.' },
+  { id:12, arabic:'الْجِنَّةِ',      english:'The Jinn',                     emoji:'🫥', description:'A dashed shape behind a curtain — dashed because jinn are real but unseen.' }
+];
+
+const TOTAL = VOCAB.length;
+
+/* =======================================================================
+   UTILITIES
+   ======================================================================= */
+function shuffle(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+
+function escapeAttr(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+
+/* =======================================================================
+   AUDIO ENGINE
+   ======================================================================= */
+let voices = [];
+
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  voices = window.speechSynthesis.getVoices() || [];
+}
+loadVoices();
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function cancelSpeech(){
+  if('speechSynthesis' in window){
+    try { window.speechSynthesis.cancel(); } catch(e){}
+  }
+}
+
+function getTTSText(text, lang){
+  if(!text) return text;
+  if(lang && lang.toLowerCase().indexOf('ar') === 0){
+    const last = text.slice(-1);
+    if(last === '\u064E' || last === '\u064F' || last === '\u0650'){
+      return text + '\u060C';
+    }
+    if(last === '\u0652'){
+      return text;
+    }
+  }
+  return text;
+}
+
+function pickVoice(lang){
+  if(!voices.length) loadVoices();
+  if(!voices.length) return null;
+  const target = lang.toLowerCase();
+  const prefix = target.split('-')[0];
+
+  let v = voices.find(x => x.lang && x.lang.replace('_','-').toLowerCase() === target);
+  if(!v) v = voices.find(x => x.lang && x.lang.toLowerCase().indexOf(prefix) === 0);
+  return v || null;
+}
+
+function speak(text, lang, btn){
+  if(!('speechSynthesis' in window) || !text) return;
+  cancelSpeech();
+
+  const ttsText = getTTSText(text, lang);
+  const u = new SpeechSynthesisUtterance(ttsText);
+  u.rate = 0.5;
+  u.pitch = 1.0;
+  u.lang = lang;
+
+  const v = pickVoice(lang);
+  if(v) u.voice = v;
+
+  if(btn){
+    u.onstart = () => btn.classList.add('speaking');
+    u.onend   = () => btn.classList.remove('speaking');
+    u.onerror = () => btn.classList.remove('speaking');
+  }
+
+  window.speechSynthesis.speak(u);
+}
+
+/* =======================================================================
+   COPY
+   ======================================================================= */
+function fallbackCopy(text, done){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly','');
+  ta.style.position = 'absolute';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e){}
+  document.body.removeChild(ta);
+  done();
+}
+
+function copyText(text, btn){
+  const done = () => {
+    if(!btn) return;
+    if(btn.dataset.orig === undefined) btn.dataset.orig = btn.textContent;
+    btn.textContent = '✅';
+    clearTimeout(btn._copyTimer);
+    btn._copyTimer = setTimeout(() => { btn.textContent = btn.dataset.orig; }, 1500);
+  };
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+/* =======================================================================
+   GLOBAL DELEGATED CLICK HANDLER
+   ======================================================================= */
+document.addEventListener('click', function(e){
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+
+  const action = el.dataset.action;
+
+  if(action === 'flip'){
+    el.classList.toggle('flipped');
+    return;
+  }
+
+  if(action === 'speak'){
+    e.stopPropagation();
+    speak(el.dataset.text || '', el.dataset.lang || 'en-US', el);
+    return;
+  }
+
+  if(action === 'copy'){
+    e.stopPropagation();
+    copyText(el.dataset.text || '', el);
+    return;
+  }
+
+  if(action === 'answer'){
+    e.stopPropagation();
+    handleAnswer(el);
+    return;
+  }
+});
+
+/* =======================================================================
+   TABS
+   ======================================================================= */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+function switchTab(name){
+  cancelSpeech();
+
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'tab-' + name);
+  });
+}
+
+/* =======================================================================
+   FLASHCARDS
+   ======================================================================= */
+let fcDeck = VOCAB.slice();
+let fcIdx = 0;
+
+const fcCard      = document.getElementById('flashcard');
+const fcArabicEl  = document.getElementById('fcArabic');
+const fcEmojiEl   = document.getElementById('fcEmoji');
+const fcEnglishEl = document.getElementById('fcEnglish');
+const fcDescEl    = document.getElementById('fcDesc');
+const fcAudioFront= document.getElementById('fcAudioFront');
+const fcAudioBack = document.getElementById('fcAudioBack');
+const fcProgress  = document.getElementById('fcProgress');
+
+function renderFlashcard(){
+  const w = fcDeck[fcIdx];
+  if(!w) return;
+
+  fcCard.classList.remove('flipped');
+  fcArabicEl.textContent  = w.arabic;
+  fcEmojiEl.textContent   = w.emoji;
+  fcEnglishEl.textContent = w.english;
+  fcDescEl.textContent    = w.description;
+
+  fcAudioFront.dataset.text = w.arabic;
+  fcAudioBack.dataset.text  = w.english;
+
+  fcProgress.textContent = (fcIdx + 1) + ' / ' + fcDeck.length;
+}
+
+document.getElementById('fcPrev').addEventListener('click', () => {
+  cancelSpeech();
+  fcIdx = (fcIdx - 1 + fcDeck.length) % fcDeck.length;
+  renderFlashcard();
+});
+
+document.getElementById('fcNext').addEventListener('click', () => {
+  cancelSpeech();
+  fcIdx = (fcIdx + 1) % fcDeck.length;
+  renderFlashcard();
+});
+
+document.getElementById('fcShuffle').addEventListener('click', () => {
+  cancelSpeech();
+  fcDeck = shuffle(VOCAB.slice());
+  fcIdx = 0;
+  renderFlashcard();
+});
+
+/* =======================================================================
+   QUIZ STATE
+   ======================================================================= */
+const q1 = { deck:[], idx:0, score:0, answered:false, currentId:null };
+const q2 = { deck:[], idx:0, score:0, answered:false, currentId:null };
+
+function buildOptions(correctWord){
+  const pool = VOCAB.filter(w => w.id !== correctWord.id);
+  shuffle(pool);
+  const opts = pool.slice(0, 3).concat([correctWord]);
+  return shuffle(opts);
+}
+
+/* ---------------- QUIZ 1 : Arabic ➔ English ---------------- */
+function startQuiz1(){
+  cancelSpeech();
+  q1.deck = shuffle(VOCAB.slice());
+  q1.idx = 0;
+  q1.score = 0;
+  q1.answered = false;
+  q1.currentId = null;
+  renderQ1();
+}
+
+function renderQ1(){
+  const scoreEl = document.getElementById('q1Score');
+  const area    = document.getElementById('q1Area');
+  const done    = document.getElementById('q1Done');
+
+  scoreEl.textContent = 'Score: ' + q1.score + ' / ' + TOTAL;
+
+  if(q1.idx >= q1.deck.length){
+    area.style.display = 'none';
+    done.style.display = 'block';
+    done.innerHTML =
+      '<div class="done-emoji">🎉</div>' +
+      '<h2>Quiz Completed!</h2>' +
+      '<p>Your final score: <strong>' + q1.score + ' / ' + TOTAL + '</strong></p>' +
+      '<div class="btn-row">' +
+        '<button class="btn accent" id="q1Retake">🔄 Retake Quiz</button>' +
+      '</div>';
+    document.getElementById('q1Retake').addEventListener('click', startQuiz1);
+    return;
+  }
+
+  area.style.display = 'block';
+  done.style.display = 'none';
+
+  const w = q1.deck[q1.idx];
+  q1.currentId = w.id;
+  q1.answered = false;
+
+  document.getElementById('q1Word').textContent = w.arabic;
+
+  const aBtn = document.getElementById('q1Audio');
+  aBtn.dataset.text = w.arabic;
+  const cBtn = document.getElementById('q1Copy');
+  cBtn.dataset.text = w.arabic;
+  cBtn.textContent = '📋';
+
+  const opts = buildOptions(w);
+  document.getElementById('q1Options').innerHTML = opts.map(o =>
+    '<div class="option-row">' +
+      '<button class="option-btn" data-action="answer" data-quiz="q1" data-id="' + o.id + '">' +
+        escapeAttr(o.english) +
+      '</button>' +
+      '<button class="audio-btn small" data-action="speak" data-lang="en-US" data-text="' +
+        escapeAttr(o.english) + '" title="Listen">🔊</button>' +
+    '</div>'
+  ).join('');
+
+  const fb = document.getElementById('q1Feedback');
+  fb.textContent = '';
+  fb.className = 'feedback';
+
+  const nextBtn = document.getElementById('q1Next');
+  nextBtn.disabled = true;
+  nextBtn.textContent = (q1.idx === q1.deck.length - 1) ? 'See Results 🎉' : 'Next Question';
+}
+
+document.getElementById('q1Next').addEventListener('click', () => {
+  cancelSpeech();
+  q1.idx++;
+  q1.answered = false;
+  renderQ1();
+});
+
+document.getElementById('q1Restart').addEventListener('click', startQuiz1);
+
+/* ---------------- QUIZ 2 : English ➔ Arabic ---------------- */
+function startQuiz2(){
+  cancelSpeech();
+  q2.deck = shuffle(VOCAB.slice());
+  q2.idx = 0;
+  q2.score = 0;
+  q2.answered = false;
+  q2.currentId = null;
+  renderQ2();
+}
+
+function renderQ2(){
+  const scoreEl = document.getElementById('q2Score');
+  const area    = document.getElementById('q2Area');
+  const done    = document.getElementById('q2Done');
+
+  scoreEl.textContent = 'Score: ' + q2.score + ' / ' + TOTAL;
+
+  if(q2.idx >= q2.deck.length){
+    area.style.display = 'none';
+    done.style.display = 'block';
+    done.innerHTML =
+      '<div class="done-emoji">🎉</div>' +
+      '<h2>Quiz Completed!</h2>' +
+      '<p>Your final score: <strong>' + q2.score + ' / ' + TOTAL + '</strong></p>' +
+      '<div class="btn-row">' +
+        '<button class="btn accent" id="q2Retake">🔄 Retake Quiz</button>' +
+      '</div>';
+    document.getElementById('q2Retake').addEventListener('click', startQuiz2);
+    return;
+  }
+
+  area.style.display = 'block';
+  done.style.display = 'none';
+
+  const w = q2.deck[q2.idx];
+  q2.currentId = w.id;
+  q2.answered = false;
+
+  document.getElementById('q2Emoji').textContent   = w.emoji;
+  document.getElementById('q2English').textContent = w.english;
+  document.getElementById('q2Desc').textContent    = w.description;
+
+  const enBtn = document.getElementById('q2AudioEn');
+  enBtn.dataset.text = w.english;
+
+  const opts = buildOptions(w);
+  document.getElementById('q2Options').innerHTML = opts.map(o =>
+    '<div class="option-row">' +
+      '<button class="option-btn rtl" data-action="answer" data-quiz="q2" data-id="' + o.id + '">' +
+        escapeAttr(o.arabic) +
+      '</button>' +
+      '<button class="audio-btn small" data-action="speak" data-lang="ar-SA" data-text="' +
+        escapeAttr(o.arabic) + '" title="Listen">🔊</button>' +
+    '</div>'
+  ).join('');
+
+  const fb = document.getElementById('q2Feedback');
+  fb.textContent = '';
+  fb.className = 'feedback';
+
+  const nextBtn = document.getElementById('q2Next');
+  nextBtn.disabled = true;
+  nextBtn.textContent = (q2.idx === q2.deck.length - 1) ? 'See Results 🎉' : 'Next Question';
+}
+
+document.getElementById('q2Next').addEventListener('click', () => {
+  cancelSpeech();
+  q2.idx++;
+  q2.answered = false;
+  renderQ2();
+});
+
+document.getElementById('q2Restart').addEventListener('click', startQuiz2);
+
+/* ---------------- SHARED ANSWER HANDLING ---------------- */
+function handleAnswer(btn){
+  const quizName = btn.dataset.quiz;
+  const state = (quizName === 'q1') ? q1 : q2;
+  if(state.answered) return;
+
+  state.answered = true;
+  cancelSpeech();
+
+  const chosenId  = btn.dataset.id;
+  const correctId = String(state.currentId);
+  const isCorrect = (chosenId === correctId);
+
+  const container = document.getElementById(quizName + 'Options');
+  const allBtns = container.querySelectorAll('.option-btn');
+
+  allBtns.forEach(b => {
+    b.disabled = true;
+    if(b.dataset.id === correctId) b.classList.add('correct');
+  });
+
+  if(!isCorrect){
+    btn.classList.add('wrong');
+  } else {
+    state.score++;
+  }
+
+  document.getElementById(quizName + 'Score').textContent =
+    'Score: ' + state.score + ' / ' + TOTAL;
+
+  const fb = document.getElementById(quizName + 'Feedback');
+  if(isCorrect){
+    fb.textContent = 'Correct! ✅';
+    fb.className = 'feedback correct';
+  } else {
+    const word = VOCAB.find(w => w.id === state.currentId);
+    const correctAnswer = (quizName === 'q1') ? word.english : word.arabic;
+    fb.textContent = 'Incorrect. The correct answer is: ' + correctAnswer;
+    fb.className = 'feedback wrong';
+  }
+
+  document.getElementById(quizName + 'Next').disabled = false;
+}
+
+/* =======================================================================
+   STUDY GUIDE
+   ======================================================================= */
+let guideDetailsVisible = true;
+
+function renderGuide(){
+  const list = document.getElementById('guideList');
+  list.innerHTML = VOCAB.map(w =>
+    '<div class="guide-item">' +
+      '<div class="guide-emoji">' + w.emoji + '</div>' +
+      '<div class="guide-content">' +
+        '<div class="guide-arabic">' +
+          '<span class="g-ar">' + w.arabic + '</span>' +
+          '<button class="audio-btn small" data-action="speak" data-lang="ar-SA" data-text="' +
+            escapeAttr(w.arabic) + '" title="Listen">🔊</button>' +
+          '<button class="audio-btn small copy" data-action="copy" data-text="' +
+            escapeAttr(w.arabic) + '" title="Copy Arabic">📋</button>' +
+        '</div>' +
+        '<div class="guide-english">' +
+          '<span>' + escapeAttr(w.english) + '</span>' +
+          '<button class="audio-btn small" data-action="speak" data-lang="en-US" data-text="' +
+            escapeAttr(w.english) + '" title="Listen">🔊</button>' +
+        '</div>' +
+        '<div class="guide-desc">' + escapeAttr(w.description) + '</div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+document.getElementById('guideToggle').addEventListener('click', function(){
+  guideDetailsVisible = !guideDetailsVisible;
+  document.getElementById('guideList').classList.toggle('hide-details', !guideDetailsVisible);
+  this.textContent = guideDetailsVisible ? 'Hide Details' : 'Show Details';
+});
+
+/* =======================================================================
+   LIFECYCLE
+   ======================================================================= */
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) cancelSpeech();
+});
+window.addEventListener('beforeunload', cancelSpeech);
+window.addEventListener('pagehide', cancelSpeech);
+
+/* =======================================================================
+   INIT
+   ======================================================================= */
+renderFlashcard();
+startQuiz1();
+startQuiz2();
+renderGuide();
+</script>
+</body>
+</html>
