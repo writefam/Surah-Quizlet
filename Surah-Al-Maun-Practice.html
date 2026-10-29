@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Al-Ma&#39;un · Vocabulary Quiz</title>
+<style>
+  :root{
+    --primary:#2c3e50;
+    --secondary:#34495e;
+    --accent:#e67e22;
+    --bg:#f4f6f8;
+    --card-bg:#ffffff;
+    --correct:#27ae60;
+    --wrong:#e74c3c;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html, body{
+    -webkit-text-size-adjust:100%;
+  }
+
+  body{
+    margin:0;
+    padding:20px;
+    background-color:var(--bg);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:var(--secondary);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+  }
+
+  h1{
+    font-size:1.6rem;
+    color:var(--primary);
+    margin:0 0 4px;
+    text-align:center;
+    font-weight:700;
+    letter-spacing:.01em;
+  }
+
+  .subtitle{
+    font-size:.75rem;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:#95a5a6;
+    text-align:center;
+    margin-bottom:16px;
+  }
+
+  .app-container{
+    width:100%;
+    max-width:650px;
+    margin:0 auto;
+    background:var(--card-bg);
+    border-radius:12px;
+    box-shadow:0 4px 22px rgba(44,62,80,.10);
+    padding:20px;
+  }
+
+  /* ---------- Tabs ---------- */
+  .nav-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+    border-bottom:2px solid #ecf0f1;
+    padding-bottom:10px;
+    margin-bottom:18px;
+  }
+
+  .tab{
+    font-family:inherit;
+    font-size:.9rem;
+    padding:9px 13px;
+    border:none;
+    background:none;
+    color:#7f8c8d;
+    border-radius:5px;
+    cursor:pointer;
+    transition:background .2s, color .2s;
+    line-height:1.2;
+  }
+
+  .tab:hover{ background:#f4f6f8; }
+
+  .tab.active{
+    background:var(--primary);
+    color:#ffffff;
+  }
+
+  .nav-back{ text-decoration:none; }
+
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  /* ---------- Generic buttons ---------- */
+  .btn{
+    font-family:inherit;
+    font-size:.95rem;
+    padding:10px 18px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+    transition:background .2s, opacity .2s, border-color .2s;
+    line-height:1.2;
+  }
+  .btn-primary{ background:var(--primary); color:#fff; }
+  .btn-primary:hover:not(:disabled){ background:var(--secondary); }
+  .btn-accent{ background:var(--accent); color:#fff; }
+  .btn-accent:hover{ background:#d35400; }
+  .btn-outline{ background:#fff; border:2px solid #ecf0f1; color:var(--secondary); }
+  .btn-outline:hover{ border-color:#bdc3c7; }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+
+  /* ---------- Audio / Copy circular buttons ---------- */
+  .audio-btn, .copy-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    padding:0;
+    line-height:1;
+    color:#fff;
+    flex:0 0 auto;
+    transition:transform .15s, background .2s;
+  }
+  .audio-btn{ background:var(--accent); }
+  .audio-btn:hover{ background:#d35400; }
+  .copy-btn{ background:var(--secondary); }
+  .copy-btn:hover{ background:var(--primary); }
+
+  .audio-btn.big, .copy-btn.big{ width:48px; height:48px; font-size:1.3rem; }
+  .audio-btn.small, .copy-btn.small{ width:36px; height:36px; font-size:1rem; }
+
+  .audio-btn:active, .copy-btn:active{ transform:scale(.93); }
+
+  .speaking{
+    animation:pulse .9s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%   { box-shadow:0 0 0 0 rgba(230,126,34,.65); }
+    70%  { box-shadow:0 0 0 12px rgba(230,126,34,0); }
+    100% { box-shadow:0 0 0 0 rgba(230,126,34,0); }
+  }
+
+  /* ---------- Flashcards ---------- */
+  .card-area{
+    height:350px;
+    perspective:1000px;
+    margin-bottom:16px;
+  }
+
+  .flashcard{
+    position:relative;
+    width:100%;
+    height:100%;
+    transform-style:preserve-3d;
+    transition:transform .55s ease;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .flashcard.flipped{ transform:rotateY(180deg); }
+
+  .card-face{
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:22px 18px;
+    text-align:center;
+    overflow:hidden;
+  }
+
+  .card-front{
+    background:linear-gradient(135deg, #ffffff 0%, #ecf0f1 100%);
+    border:2px solid #bdc3c7;
+  }
+
+  .card-back{
+    background:linear-gradient(135deg, #e8f4f8 0%, #d1e8f0 100%);
+    border:2px solid #a9cce3;
+    transform:rotateY(180deg);
+  }
+
+  .fc-arabic{
+    font-size:3.5rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    color:var(--primary);
+    line-height:1.4;
+    margin-bottom:18px;
+    word-break:break-word;
+  }
+
+  .fc-hint{
+    position:absolute;
+    bottom:14px;
+    left:0; right:0;
+    font-size:.72rem;
+    color:#95a5a6;
+    letter-spacing:.04em;
+  }
+
+  .fc-emoji{
+    font-size:2.8rem;
+    line-height:1.1;
+    margin-bottom:8px;
+  }
+
+  .fc-english{
+    font-size:1.6rem;
+    font-weight:700;
+    color:var(--primary);
+    margin-bottom:10px;
+  }
+
+  .fc-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:.9rem;
+    line-height:1.45;
+    margin-top:12px;
+    max-width:420px;
+  }
+
+  .card-nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+
+  .progress{
+    font-size:.95rem;
+    font-weight:700;
+    color:var(--secondary);
+    white-space:nowrap;
+  }
+
+  .shuffle-wrap{ text-align:center; }
+
+  /* ---------- Quiz ---------- */
+  .score{
+    text-align:center;
+    font-weight:700;
+    color:var(--secondary);
+    font-size:1rem;
+    margin-bottom:14px;
+  }
+
+  .prompt{
+    text-align:center;
+    font-weight:700;
+    color:var(--primary);
+    margin-bottom:14px;
+    font-size:1rem;
+  }
+
+  .word-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+    text-align:center;
+  }
+
+  .arabic-big{
+    font-size:3rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    color:var(--primary);
+    line-height:1.4;
+  }
+
+  .qb-stack{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    margin-bottom:20px;
+  }
+
+  .qb-emoji{ font-size:3rem; line-height:1; }
+
+  .english-word{
+    font-size:1.6rem;
+    font-weight:700;
+    color:var(--primary);
+    direction:ltr;
+  }
+
+  .desc-text{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:.9rem;
+    line-height:1.45;
+    max-width:440px;
+    text-align:center;
+  }
+
+  .inline-audio-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .option-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+
+  .option-btn{
+    flex:1 1 auto;
+    min-width:0;
+    text-align:left;
+    padding:12px 14px;
+    background:#fff;
+    border:2px solid #ecf0f1;
+    border-radius:8px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:1rem;
+    color:var(--secondary);
+    transition:border-color .2s, background .2s, color .2s;
+    line-height:1.35;
+    word-break:break-word;
+  }
+  .option-btn:hover:not(:disabled){
+    border-color:var(--primary);
+    background:#f8fafb;
+  }
+  .option-btn:disabled{ cursor:default; }
+
+  .option-btn.rtl{
+    direction:rtl;
+    unicode-bidi:isolate;
+    text-align:right;
+    font-size:1.5rem;
+    line-height:1.6;
+  }
+
+  .option-btn.correct{
+    border-color:var(--correct);
+    background:rgba(39,174,96,.12);
+    color:var(--correct);
+    font-weight:700;
+  }
+  .option-btn.wrong{
+    border-color:var(--wrong);
+    background:rgba(231,76,60,.12);
+    color:var(--wrong);
+    font-weight:700;
+  }
+
+  .feedback{
+    text-align:center;
+    font-weight:600;
+    font-size:.95rem;
+    min-height:24px;
+    margin:14px 0 4px;
+    line-height:1.4;
+  }
+  .feedback.correct{ color:var(--correct); }
+  .feedback.wrong{ color:var(--wrong); }
+
+  .quiz-actions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:12px;
+  }
+
+  .complete{
+    text-align:center;
+    padding:26px 10px;
+  }
+  .complete-title{
+    font-size:1.4rem;
+    font-weight:700;
+    color:var(--primary);
+    margin-bottom:10px;
+  }
+  .complete-score{
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--accent);
+  }
+
+  /* ---------- Study Guide ---------- */
+  .guide-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .guide-head h2{
+    font-size:1rem;
+    margin:0;
+    color:var(--primary);
+    font-weight:700;
+  }
+
+  .guide-list{
+    max-height:450px;
+    overflow-y:auto;
+    padding-right:4px;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .guide-item{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px;
+    border:1px solid #ecf0f1;
+    border-radius:10px;
+    background:#fbfcfd;
+    margin-bottom:10px;
+  }
+
+  .guide-emoji{
+    font-size:2rem;
+    line-height:1;
+    flex:0 0 auto;
+  }
+
+  .guide-content{ flex:1 1 auto; min-width:0; }
+
+  .guide-arabic-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:6px;
+  }
+
+  .guide-arabic{
+    font-size:1.8rem;
+    direction:rtl;
+    unicode-bidi:isolate;
+    color:var(--primary);
+    line-height:1.5;
+  }
+
+  .guide-english-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:4px;
+  }
+
+  .guide-english{
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--secondary);
+  }
+
+  .guide-desc{
+    font-style:italic;
+    color:#7f8c8d;
+    font-size:.88rem;
+    line-height:1.45;
+  }
+
+  .guide-list.hide-details .guide-detail{ display:none; }
+
+  /* ---------- Footer ---------- */
+  .app-footer{
+    margin-top:20px;
+    padding-top:14px;
+    border-top:1px solid #ecf0f1;
+    text-align:center;
+    font-size:.8rem;
+    color:#95a5a6;
+    line-height:1.55;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:480px){
+    body{ padding:12px; }
+    h1{ font-size:1.25rem; }
+    .subtitle{ font-size:.63rem; margin-bottom:12px; }
+    .app-container{ padding:14px; }
+    .tab{ font-size:.78rem; padding:7px 9px; }
+    .card-area{ height:320px; }
+    .fc-arabic{ font-size:2.4rem; margin-bottom:14px; }
+    .fc-emoji{ font-size:2.3rem; }
+    .fc-english{ font-size:1.35rem; }
+    .fc-desc{ font-size:.82rem; }
+    .arabic-big{ font-size:2.3rem; }
+    .qb-emoji{ font-size:2.4rem; }
+    .english-word{ font-size:1.35rem; }
+    .option-btn{ padding:10px; font-size:.9rem; }
+    .option-btn.rtl{ font-size:1.25rem; }
+    .btn{ padding:8px 13px; font-size:.85rem; }
+    .guide-arabic{ font-size:1.4rem; }
+    .guide-english{ font-size:1rem; }
+    .audio-btn.big, .copy-btn.big{ width:42px; height:42px; font-size:1.15rem; }
+    .audio-btn.small, .copy-btn.small{ width:32px; height:32px; font-size:.9rem; }
+    .complete-title{ font-size:1.15rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Small Kindnesses</h1>
+<div class="subtitle">Al-Ma&#39;un · Vocabulary Quiz</div>
+
+<div class="app-container">
+
+  <nav class="nav-tabs">
+    <button class="tab active" type="button" data-tab="flashcards">Flashcards</button>
+    <button class="tab" type="button" data-tab="quiz-ar">Quiz (Ar &#10132; En)</button>
+    <button class="tab" type="button" data-tab="quiz-en">Quiz (En &#10132; Ar)</button>
+    <button class="tab" type="button" data-tab="guide">Study Guide</button>
+    <a class="tab nav-back" href="index.html">&#8592; All Surahs</a>
+  </nav>
+
+  <!-- ================= FLASHCARDS ================= -->
+  <section class="tab-panel active" id="tab-flashcards">
+    <div class="card-area">
+      <div class="flashcard" id="flashcard">
+        <div class="card-face card-front">
+          <div class="fc-arabic" id="fc-arabic"></div>
+          <button class="audio-btn big" id="fc-audio-front" type="button" aria-label="Play Arabic audio">&#128266;</button>
+          <div class="fc-hint">Tap card to flip</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="fc-emoji" id="fc-emoji"></div>
+          <div class="fc-english" id="fc-english"></div>
+          <button class="audio-btn small" id="fc-audio-back" type="button" aria-label="Play English audio">&#128266;</button>
+          <div class="fc-desc" id="fc-desc"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-nav">
+      <button class="btn btn-outline" id="fc-prev" type="button">Previous</button>
+      <span class="progress" id="fc-progress">1 / 12</span>
+      <button class="btn btn-outline" id="fc-next" type="button">Next</button>
+    </div>
+
+    <div class="shuffle-wrap">
+      <button class="btn btn-accent" id="fc-shuffle" type="button">Shuffle Deck</button>
+    </div>
+  </section>
+
+  <!-- ================= QUIZ Ar -> En ================= -->
+  <section class="tab-panel" id="tab-quiz-ar">
+    <div class="score" id="qa-score">Score: 0 / 12</div>
+
+    <div id="qa-play">
+      <div class="prompt">What is the meaning of this word?</div>
+
+      <div class="word-row">
+        <span class="arabic-big" id="qa-word"></span>
+        <button class="audio-btn big" id="qa-audio" type="button" aria-label="Play Arabic audio">&#128266;</button>
+        <button class="copy-btn big" id="qa-copy" type="button" aria-label="Copy Arabic word">&#128203;</button>
+      </div>
+
+      <div id="qa-options"></div>
+      <div class="feedback" id="qa-feedback"></div>
+    </div>
+
+    <div class="complete" id="qa-complete" style="display:none;"></div>
+
+    <div class="quiz-actions">
+      <button class="btn btn-primary" id="qa-next" type="button" disabled>Next Question</button>
+      <button class="btn btn-outline" id="qa-restart" type="button">Restart Quiz</button>
+    </div>
+  </section>
+
+  <!-- ================= QUIZ En -> Ar ================= -->
+  <section class="tab-panel" id="tab-quiz-en">
+    <div class="score" id="qb-score">Score: 0 / 12</div>
+
+    <div id="qb-play">
+      <div class="prompt">Which Arabic word matches this meaning?</div>
+
+      <div class="qb-stack">
+        <div class="qb-emoji" id="qb-emoji"></div>
+        <div class="inline-audio-row">
+          <span class="english-word" id="qb-english"></span>
+          <button class="audio-btn big" id="qb-audio" type="button" aria-label="Play English audio">&#128266;</button>
+        </div>
+        <div class="desc-text" id="qb-desc"></div>
+      </div>
+
+      <div id="qb-options"></div>
+      <div class="feedback" id="qb-feedback"></div>
+    </div>
+
+    <div class="complete" id="qb-complete" style="display:none;"></div>
+
+    <div class="quiz-actions">
+      <button class="btn btn-primary" id="qb-next" type="button" disabled>Next Question</button>
+      <button class="btn btn-outline" id="qb-restart" type="button">Restart Quiz</button>
+    </div>
+  </section>
+
+  <!-- ================= STUDY GUIDE ================= -->
+  <section class="tab-panel" id="tab-guide">
+    <div class="guide-head">
+      <h2>All 12 Vocabulary Words</h2>
+      <button class="btn btn-accent" id="guide-toggle" type="button">Hide Details</button>
+    </div>
+    <div class="guide-list" id="guide-list"></div>
+  </section>
+
+  <footer class="app-footer">
+    Browser text-to-speech is not perfect for Qur&#39;anic Arabic &mdash; please verify your
+    pronunciation with a teacher or a dedicated Qur&#39;an app. For accurate audio, use the
+    &#128203; copy button and paste the word into an app you trust.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* =========================================================
+     VOCABULARY DATA  (from the Week 8 Al-Ma'un study packet)
+     ========================================================= */
+  var VOCAB = [
+    {
+      id: 1,
+      arabic: 'أَرَأَيْتَ',
+      english: 'Have you seen?',
+      emoji: '👀',
+      description: 'A girl shading her eyes to look. You met (you saw) in An-Nasr. The ا in front turns it into a question.'
+    },
+    {
+      id: 2,
+      arabic: 'يُكَذِّبُ',
+      english: 'He denies',
+      emoji: '📄',
+      description: 'A man tearing up an IOU note. He says it is not true that he will ever have to pay anything back.'
+    },
+    {
+      id: 3,
+      arabic: 'الدِّينِ',
+      english: 'Judgment Day',
+      emoji: '⚖️',
+      description: 'A balance scale. On Judgment Day, everything we did is paid back. It has the same letters as a debt: what you owe gets paid back.'
+    },
+    {
+      id: 4,
+      arabic: 'يَدُعُّ',
+      english: 'Pushes away',
+      emoji: '🤚',
+      description: 'A man shoving the orphan boy away from the party. Not a gentle push: a rough one.'
+    },
+    {
+      id: 5,
+      arabic: 'الْيَتِيمَ',
+      english: 'The orphan',
+      emoji: '🧒',
+      description: 'A small boy holding a photo of his father. An orphan is a child whose father has died. The Prophet ﷺ was an orphan too.'
+    },
+    {
+      id: 6,
+      arabic: 'طَعَامِ',
+      english: 'Food',
+      emoji: '🍲',
+      description: 'A big pot of stew at the party, with plenty for everyone.'
+    },
+    {
+      id: 7,
+      arabic: 'الْمِسْكِينِ',
+      english: 'The poor person',
+      emoji: '🥣',
+      description: 'An old man holding out an empty bowl: a grown-up who does not have enough.'
+    },
+    {
+      id: 8,
+      arabic: 'وَيْلٌ',
+      english: 'Big trouble',
+      emoji: '⚠️',
+      description: "The show-offs' platform snapping under their feet. وَيْلٌ is a warning: big trouble is coming."
+    },
+    {
+      id: 9,
+      arabic: 'الْمُصَلِّينَ',
+      english: 'Those who pray',
+      emoji: '🕌',
+      description: 'A row of people praying. More than one person, because the word means a group.'
+    },
+    {
+      id: 10,
+      arabic: 'سَاهُونَ',
+      english: 'Careless',
+      emoji: '⏰',
+      description: 'A clock past prayer time while two men keep scrolling. Careless about prayer: they let the time pass.'
+    },
+    {
+      id: 11,
+      arabic: 'يُرَاءُونَ',
+      english: 'They show off',
+      emoji: '😏',
+      description: 'Two men praying while they watch the people praising them. They pray to be seen, not for Allah.'
+    },
+    {
+      id: 12,
+      arabic: 'وَيَمْنَعُونَ الْمَاعُونَ',
+      english: "And won't share small things",
+      emoji: '🍬',
+      description: 'A guest pulling the sugar jar away from a neighbor with an empty cup. الْمَاعُونَ are small everyday things: a pen, a bucket, a little sugar.'
+    }
+  ];
+
+  /* =========================================================
+     SPEECH ENGINE
+     ========================================================= */
+  var speechSupported = ('speechSynthesis' in window) && (typeof window.SpeechSynthesisUtterance === 'function');
+  var cachedVoices = [];
+
+  function loadVoices(){
+    if(!speechSupported) return;
+    try { cachedVoices = window.speechSynthesis.getVoices() || []; }
+    catch(e){ cachedVoices = []; }
+  }
+
+  if(speechSupported){
+    loadVoices();
+    if(typeof window.speechSynthesis.onvoiceschanged !== 'undefined'){
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }
+
+  function pickVoice(lang){
+    if(!speechSupported) return null;
+    if(!cachedVoices.length) loadVoices();
+    if(!cachedVoices.length) return null;
+
+    var target = String(lang).toLowerCase();
+    var prefix = target.split('-')[0];
+    var i;
+
+    for(i = 0; i < cachedVoices.length; i++){
+      if(cachedVoices[i].lang && cachedVoices[i].lang.toLowerCase() === target){
+        return cachedVoices[i];
+      }
+    }
+    for(i = 0; i < cachedVoices.length; i++){
+      if(cachedVoices[i].lang && cachedVoices[i].lang.toLowerCase().indexOf(prefix) === 0){
+        return cachedVoices[i];
+      }
+    }
+    return null;
+  }
+
+  /**
+   * "Final Harakah" trick.
+   * For Arabic only: if the last character is Fathah, Dammah or Kasrah,
+   * append an Arabic comma (\u060C) so the TTS engine pronounces the
+   * final short vowel. Sukoon => return unchanged.
+   */
+  function getTTSText(text, lang){
+    if(!text) return text;
+    if(!lang || lang.toLowerCase().indexOf('ar') !== 0) return text;
+
+    var last = text.charAt(text.length - 1);
+
+    if(last === '\u064E' || last === '\u064F' || last === '\u0650'){
+      return text + '\u060C';
+    }
+    if(last === '\u0652'){
+      return text;
+    }
+    return text;
+  }
+
+  function stopSpeech(){
+    if(!speechSupported) return;
+    try { window.speechSynthesis.cancel(); } catch(e){}
+    var els = document.querySelectorAll('.speaking');
+    for(var i = 0; i < els.length; i++){ els[i].classList.remove('speaking'); }
+  }
+
+  function speak(text, lang, btn){
+    if(!speechSupported || !text) return;
+
+    stopSpeech();
+
+    var utterance;
+    try {
+      utterance = new SpeechSynthesisUtterance(getTTSText(text, lang));
+    } catch(e){
+      return;
+    }
+
+    utterance.lang = lang;
+    utterance.rate = 0.5;
+    utterance.pitch = 1.0;
+
+    var voice = pickVoice(lang);
+    if(voice){ utterance.voice = voice; }
+
+    if(btn){ btn.classList.add('speaking'); }
+
+    utterance.onend = function(){ if(btn){ btn.classList.remove('speaking'); } };
+    utterance.onerror = function(){ if(btn){ btn.classList.remove('speaking'); } };
+
+    try { window.speechSynthesis.speak(utterance); }
+    catch(e){ if(btn){ btn.classList.remove('speaking'); } }
+  }
+
+  /* =========================================================
+     COPY BUTTON
+     ========================================================= */
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  function copyText(text, btn){
+    var showDone = function(){
+      if(!btn) return;
+      btn.textContent = '✅';
+      if(btn._copyTimer){ clearTimeout(btn._copyTimer); }
+      btn._copyTimer = setTimeout(function(){ btn.textContent = '📋'; }, 1500);
+    };
+
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(showDone).catch(function(){
+        fallbackCopy(text);
+        showDone();
+      });
+    } else {
+      fallbackCopy(text);
+      showDone();
+    }
+  }
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+  function shuffleArray(arr){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function byId(id){ return document.getElementById(id); }
+
+  /* =========================================================
+     TABS
+     ========================================================= */
+  var tabButtons = document.querySelectorAll('.tab[data-tab]');
+  var tabPanels = document.querySelectorAll('.tab-panel');
+
+  function switchTab(name){
+    stopSpeech();
+
+    var i;
+    for(i = 0; i < tabButtons.length; i++){
+      if(tabButtons[i].getAttribute('data-tab') === name){
+        tabButtons[i].classList.add('active');
+      } else {
+        tabButtons[i].classList.remove('active');
+      }
+    }
+    for(i = 0; i < tabPanels.length; i++){
+      if(tabPanels[i].id === 'tab-' + name){
+        tabPanels[i].classList.add('active');
+      } else {
+        tabPanels[i].classList.remove('active');
+      }
+    }
+  }
+
+  for(var t = 0; t < tabButtons.length; t++){
+    (function(btn){
+      btn.addEventListener('click', function(){
+        switchTab(btn.getAttribute('data-tab'));
+      });
+    })(tabButtons[t]);
+  }
+
+  /* =========================================================
+     FLASHCARDS
+     ========================================================= */
+  var flashDeck = VOCAB.slice();
+  var flashIndex = 0;
+
+  var elFlashcard   = byId('flashcard');
+  var elFcArabic    = byId('fc-arabic');
+  var elFcEmoji     = byId('fc-emoji');
+  var elFcEnglish   = byId('fc-english');
+  var elFcDesc      = byId('fc-desc');
+  var elFcProgress  = byId('fc-progress');
+  var btnFcAudioF   = byId('fc-audio-front');
+  var btnFcAudioB   = byId('fc-audio-back');
+
+  function renderFlashcard(){
+    var item = flashDeck[flashIndex];
+    if(!item) return;
+
+    elFlashcard.classList.remove('flipped');
+    stopSpeech();
+
+    elFcArabic.textContent  = item.arabic;
+    elFcEmoji.textContent   = item.emoji;
+    elFcEnglish.textContent = item.english;
+    elFcDesc.textContent    = item.description;
+    elFcProgress.textContent = (flashIndex + 1) + ' / ' + flashDeck.length;
+  }
+
+  elFlashcard.addEventListener('click', function(){
+    elFlashcard.classList.toggle('flipped');
+  });
+
+  btnFcAudioF.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    speak(flashDeck[flashIndex].arabic, 'ar-SA', btnFcAudioF);
+  });
+
+  btnFcAudioB.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    speak(flashDeck[flashIndex].english, 'en-US', btnFcAudioB);
+  });
+
+  byId('fc-prev').addEventListener('click', function(){
+    flashIndex = (flashIndex - 1 + flashDeck.length) % flashDeck.length;
+    renderFlashcard();
+  });
+
+  byId('fc-next').addEventListener('click', function(){
+    flashIndex = (flashIndex + 1) % flashDeck.length;
+    renderFlashcard();
+  });
+
+  byId('fc-shuffle').addEventListener('click', function(){
+    flashDeck = shuffleArray(VOCAB);
+    flashIndex = 0;
+    renderFlashcard();
+  });
+
+  /* =========================================================
+     QUIZ ENGINE (shared builder)
+     ========================================================= */
+  function buildQuiz(){
+    var questions = shuffleArray(VOCAB).map(function(item){
+      var others = shuffleArray(VOCAB.filter(function(v){ return v.id !== item.id; })).slice(0, 3);
+      return {
+        item: item,
+        options: shuffleArray([item].concat(others))
+      };
+    });
+
+    return {
+      questions: questions,
+      index: 0,
+      score: 0,
+      answered: false
+    };
+  }
+
+  /* ---------------------------------------------------------
+     QUIZ 1 : Arabic -> English
+     --------------------------------------------------------- */
+  var quizAr = buildQuiz();
+
+  var qaScoreEl    = byId('qa-score');
+  var qaPlayEl     = byId('qa-play');
+  var qaCompleteEl = byId('qa-complete');
+  var qaWordEl     = byId('qa-word');
+  var qaOptionsEl  = byId('qa-options');
+  var qaFeedbackEl = byId('qa-feedback');
+  var qaAudioBtn   = byId('qa-audio');
+  var qaCopyBtn    = byId('qa-copy');
+  var qaNextBtn    = byId('qa-next');
+
+  function renderQuizAr(){
+    var s = quizAr;
+    var total = s.questions.length;
+
+    qaScoreEl.textContent = 'Score: ' + s.score + ' / ' + total;
+
+    if(s.index >= total){
+      showQuizArComplete();
+      return;
+    }
+
+    qaPlayEl.style.display = '';
+    qaCompleteEl.style.display = 'none';
+    qaNextBtn.style.display = '';
+    qaNextBtn.disabled = true;
+
+    qaFeedbackEl.textContent = '';
+    qaFeedbackEl.className = 'feedback';
+
+    qaAudioBtn.classList.remove('speaking');
+
+    var q = s.questions[s.index];
+    qaWordEl.textContent = q.item.arabic;
+
+    qaOptionsEl.innerHTML = '';
+
+    q.options.forEach(function(opt){
+      var row = document.createElement('div');
+      row.className = 'option-row';
+
+      var optBtn = document.createElement('button');
+      optBtn.type = 'button';
+      optBtn.className = 'option-btn';
+      optBtn.textContent = opt.english;
+      optBtn.setAttribute('data-id', String(opt.id));
+      optBtn.addEventListener('click', function(){
+        answerQuizAr(opt, optBtn);
+      });
+
+      var audioBtn = document.createElement('button');
+      audioBtn.type = 'button';
+      audioBtn.className = 'audio-btn small';
+      audioBtn.textContent = '🔊';
+      audioBtn.setAttribute('aria-label', 'Play English audio');
+      audioBtn.addEventListener('click', function(ev){
+        ev.stopPropagation();
+        speak(opt.english, 'en-US', audioBtn);
+      });
+
+      row.appendChild(optBtn);
+      row.appendChild(audioBtn);
+      qaOptionsEl.appendChild(row);
+    });
+  }
+
+  function answerQuizAr(opt, btn){
+    var s = quizAr;
+    if(s.answered || s.index >= s.questions.length) return;
+    s.answered = true;
+
+    var q = s.questions[s.index];
+    var isCorrect = (opt.id === q.item.id);
+    if(isCorrect) s.score++;
+
+    var btns = qaOptionsEl.querySelectorAll('.option-btn');
+    for(var i = 0; i < btns.length; i++){
+      var b = btns[i];
+      b.disabled = true;
+      if(Number(b.getAttribute('data-id')) === q.item.id){
+        b.classList.add('correct');
+      } else if(b === btn){
+        b.classList.add('wrong');
+      }
+    }
+
+    if(isCorrect){
+      qaFeedbackEl.textContent = 'Correct! ✅';
+      qaFeedbackEl.className = 'feedback correct';
+    } else {
+      qaFeedbackEl.textContent = 'Incorrect. The correct answer is: ' + q.item.english;
+      qaFeedbackEl.className = 'feedback wrong';
+    }
+
+    qaScoreEl.textContent = 'Score: ' + s.score + ' / ' + s.questions.length;
+    qaNextBtn.disabled = false;
+  }
+
+  function showQuizArComplete(){
+    var s = quizAr;
+    qaPlayEl.style.display = 'none';
+    qaNextBtn.style.display = 'none';
+    qaCompleteEl.style.display = 'block';
+    qaCompleteEl.innerHTML =
+      '<div class="complete-title">Quiz Completed! 🎉</div>' +
+      '<div class="complete-score">Final Score: ' + s.score + ' / ' + s.questions.length + '</div>';
+    qaScoreEl.textContent = 'Score: ' + s.score + ' / ' + s.questions.length;
+    stopSpeech();
+  }
+
+  qaNextBtn.addEventListener('click', function(){
+    var s = quizAr;
+    if(!s.answered) return;
+    s.index++;
+    s.answered = false;
+    renderQuizAr();
+  });
+
+  byId('qa-restart').addEventListener('click', function(){
+    quizAr = buildQuiz();
+    renderQuizAr();
+  });
+
+  qaAudioBtn.addEventListener('click', function(){
+    var s = quizAr;
+    if(s.index < s.questions.length){
+      speak(s.questions[s.index].item.arabic, 'ar-SA', qaAudioBtn);
+    }
+  });
+
+  qaCopyBtn.addEventListener('click', function(){
+    var s = quizAr;
+    if(s.index < s.questions.length){
+      copyText(s.questions[s.index].item.arabic, qaCopyBtn);
+    }
+  });
+
+  /* ---------------------------------------------------------
+     QUIZ 2 : English -> Arabic
+     --------------------------------------------------------- */
+  var quizEn = buildQuiz();
+
+  var qbScoreEl    = byId('qb-score');
+  var qbPlayEl     = byId('qb-play');
+  var qbCompleteEl = byId('qb-complete');
+  var qbEmojiEl    = byId('qb-emoji');
+  var qbEnglishEl  = byId('qb-english');
+  var qbDescEl     = byId('qb-desc');
+  var qbOptionsEl  = byId('qb-options');
+  var qbFeedbackEl = byId('qb-feedback');
+  var qbAudioBtn   = byId('qb-audio');
+  var qbNextBtn    = byId('qb-next');
+
+  function renderQuizEn(){
+    var s = quizEn;
+    var total = s.questions.length;
+
+    qbScoreEl.textContent = 'Score: ' + s.score + ' / ' + total;
+
+    if(s.index >= total){
+      showQuizEnComplete();
+      return;
+    }
+
+    qbPlayEl.style.display = '';
+    qbCompleteEl.style.display = 'none';
+    qbNextBtn.style.display = '';
+    qbNextBtn.disabled = true;
+
+    qbFeedbackEl.textContent = '';
+    qbFeedbackEl.className = 'feedback';
+
+    qbAudioBtn.classList.remove('speaking');
+
+    var q = s.questions[s.index];
+    qbEmojiEl.textContent   = q.item.emoji;
+    qbEnglishEl.textContent = q.item.english;
+    qbDescEl.textContent    = q.item.description;
+
+    qbOptionsEl.innerHTML = '';
+
+    q.options.forEach(function(opt){
+      var row = document.createElement('div');
+      row.className = 'option-row';
+
+      var optBtn = document.createElement('button');
+      optBtn.type = 'button';
+      optBtn.className = 'option-btn rtl';
+      optBtn.textContent = opt.arabic;
+      optBtn.setAttribute('data-id', String(opt.id));
+      optBtn.addEventListener('click', function(){
+        answerQuizEn(opt, optBtn);
+      });
+
+      var audioBtn = document.createElement('button');
+      audioBtn.type = 'button';
+      audioBtn.className = 'audio-btn small';
+      audioBtn.textContent = '🔊';
+      audioBtn.setAttribute('aria-label', 'Play Arabic audio');
+      audioBtn.addEventListener('click', function(ev){
+        ev.stopPropagation();
+        speak(opt.arabic, 'ar-SA', audioBtn);
+      });
+
+      row.appendChild(optBtn);
+      row.appendChild(audioBtn);
+      qbOptionsEl.appendChild(row);
+    });
+  }
+
+  function answerQuizEn(opt, btn){
+    var s = quizEn;
+    if(s.answered || s.index >= s.questions.length) return;
+    s.answered = true;
+
+    var q = s.questions[s.index];
+    var isCorrect = (opt.id === q.item.id);
+    if(isCorrect) s.score++;
+
+    var btns = qbOptionsEl.querySelectorAll('.option-btn');
+    for(var i = 0; i < btns.length; i++){
+      var b = btns[i];
+      b.disabled = true;
+      if(Number(b.getAttribute('data-id')) === q.item.id){
+        b.classList.add('correct');
+      } else if(b === btn){
+        b.classList.add('wrong');
+      }
+    }
+
+    if(isCorrect){
+      qbFeedbackEl.textContent = 'Correct! ✅';
+      qbFeedbackEl.className = 'feedback correct';
+    } else {
+      qbFeedbackEl.textContent = 'Incorrect. The correct answer is: ' + q.item.arabic;
+      qbFeedbackEl.className = 'feedback wrong';
+    }
+
+    qbScoreEl.textContent = 'Score: ' + s.score + ' / ' + s.questions.length;
+    qbNextBtn.disabled = false;
+  }
+
+  function showQuizEnComplete(){
+    var s = quizEn;
+    qbPlayEl.style.display = 'none';
+    qbNextBtn.style.display = 'none';
+    qbCompleteEl.style.display = 'block';
+    qbCompleteEl.innerHTML =
+      '<div class="complete-title">Quiz Completed! 🎉</div>' +
+      '<div class="complete-score">Final Score: ' + s.score + ' / ' + s.questions.length + '</div>';
+    qbScoreEl.textContent = 'Score: ' + s.score + ' / ' + s.questions.length;
+    stopSpeech();
+  }
+
+  qbNextBtn.addEventListener('click', function(){
+    var s = quizEn;
+    if(!s.answered) return;
+    s.index++;
+    s.answered = false;
+    renderQuizEn();
+  });
+
+  byId('qb-restart').addEventListener('click', function(){
+    quizEn = buildQuiz();
+    renderQuizEn();
+  });
+
+  qbAudioBtn.addEventListener('click', function(){
+    var s = quizEn;
+    if(s.index < s.questions.length){
+      speak(s.questions[s.index].item.english, 'en-US', qbAudioBtn);
+    }
+  });
+
+  /* =========================================================
+     STUDY GUIDE
+     ========================================================= */
+  var guideListEl = byId('guide-list');
+  var guideToggleBtn = byId('guide-toggle');
+
+  function renderGuide(){
+    var html = '';
+
+    VOCAB.forEach(function(item){
+      html +=
+        '<div class="guide-item">' +
+          '<div class="guide-emoji">' + item.emoji + '</div>' +
+          '<div class="guide-content">' +
+            '<div class="guide-arabic-row">' +
+              '<span class="guide-arabic">' + item.arabic + '</span>' +
+              '<button class="audio-btn small" type="button" data-audio="ar" data-id="' + item.id + '" aria-label="Play Arabic audio">🔊</button>' +
+              '<button class="copy-btn small" type="button" data-copy="' + item.id + '" aria-label="Copy Arabic word">📋</button>' +
+            '</div>' +
+            '<div class="guide-detail">' +
+              '<div class="guide-english-row">' +
+                '<span class="guide-english">' + item.english + '</span>' +
+                '<button class="audio-btn small" type="button" data-audio="en" data-id="' + item.id + '" aria-label="Play English audio">🔊</button>' +
+              '</div>' +
+              '<div class="guide-desc">' + item.description + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    });
+
+    guideListEl.innerHTML = html;
+  }
+
+  guideListEl.addEventListener('click', function(ev){
+    var target = ev.target;
+    if(!target || !target.closest) return;
+
+    var audioBtn = target.closest('[data-audio]');
+    if(audioBtn){
+      ev.stopPropagation();
+      var aId = Number(audioBtn.getAttribute('data-id'));
+      var aItem = VOCAB.filter(function(v){ return v.id === aId; })[0];
+      if(aItem){
+        if(audioBtn.getAttribute('data-audio') === 'ar'){
+          speak(aItem.arabic, 'ar-SA', audioBtn);
+        } else {
+          speak(aItem.english, 'en-US', audioBtn);
+        }
+      }
+      return;
+    }
+
+    var copyBtn = target.closest('[data-copy]');
+    if(copyBtn){
+      ev.stopPropagation();
+      var cId = Number(copyBtn.getAttribute('data-copy'));
+      var cItem = VOCAB.filter(function(v){ return v.id === cId; })[0];
+      if(cItem){ copyText(cItem.arabic, copyBtn); }
+    }
+  });
+
+  guideToggleBtn.addEventListener('click', function(){
+    var hidden = guideListEl.classList.toggle('hide-details');
+    guideToggleBtn.textContent = hidden ? 'Show Details' : 'Hide Details';
+  });
+
+  /* =========================================================
+     GLOBAL SPEECH CLEANUP
+     ========================================================= */
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){ stopSpeech(); }
+  });
+  window.addEventListener('pagehide', stopSpeech);
+  window.addEventListener('beforeunload', stopSpeech);
+  window.addEventListener('blur', stopSpeech);
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  renderFlashcard();
+  renderQuizAr();
+  renderQuizEn();
+  renderGuide();
+
+  /* Some browsers populate voices lazily — refresh once more. */
+  setTimeout(loadVoices, 400);
+  setTimeout(loadVoices, 1200);
+
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c9f17348dafb4107b3ffcd0c62f15653"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
