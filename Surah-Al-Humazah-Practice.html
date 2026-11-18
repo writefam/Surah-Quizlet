@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Al-Humazah Vocabulary — The Twelve Words</title>
+<style>
+:root{
+  --primary:#2c3e50;
+  --secondary:#34495e;
+  --accent:#e67e22;
+  --bg:#f4f6f8;
+  --card-bg:#ffffff;
+  --correct:#27ae60;
+  --wrong:#e74c3c;
+}
+*{ -webkit-box-sizing:border-box; box-sizing:border-box; }
+
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  background-color:var(--bg);
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding:20px;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-orient:vertical;
+  -webkit-box-direction:normal;
+      -ms-flex-direction:column;
+          flex-direction:column;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  color:var(--primary);
+  min-height:100vh;
+}
+
+h1{
+  font-size:1.8rem;
+  color:var(--primary);
+  text-align:center;
+  margin:0 0 6px 0;
+  font-weight:700;
+  letter-spacing:0.3px;
+}
+
+.subtitle{
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  font-size:0.72rem;
+  color:#7f8c8d;
+  text-align:center;
+  margin-bottom:18px;
+  font-weight:600;
+}
+
+/* ---------- Container ---------- */
+.app-container{
+  width:100%;
+  max-width:650px;
+  background:var(--card-bg);
+  border-radius:12px;
+  -webkit-box-shadow:0 6px 22px rgba(44,62,80,0.10);
+          box-shadow:0 6px 22px rgba(44,62,80,0.10);
+  padding:20px;
+}
+
+/* ---------- Tabs ---------- */
+.nav-tabs{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -ms-flex-wrap:wrap;
+      flex-wrap:wrap;
+  gap:5px;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  border-bottom:2px solid #ecf0f1;
+  padding-bottom:10px;
+  margin-bottom:18px;
+}
+.tab{
+  border:none;
+  background:transparent;
+  color:#7f8c8d;
+  padding:9px 14px;
+  font-size:0.85rem;
+  font-family:inherit;
+  font-weight:600;
+  cursor:pointer;
+  border-radius:5px;
+  -webkit-transition:background .2s, color .2s;
+          transition:background .2s, color .2s;
+}
+.tab:hover{ background:#f0f3f5; }
+.tab.active{
+  background:var(--primary);
+  color:#ffffff;
+}
+.tab-panel{ display:none; }
+.tab-panel.active{ display:block; }
+
+/* ---------- Buttons ---------- */
+.btn{
+  font-family:inherit;
+  font-size:0.9rem;
+  padding:9px 16px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+  background:var(--secondary);
+  color:#ffffff;
+  font-weight:600;
+  -webkit-transition:opacity .2s, background .2s;
+          transition:opacity .2s, background .2s;
+}
+.btn:hover:not(:disabled){ opacity:.88; }
+.btn:disabled{ opacity:.4; cursor:not-allowed; }
+.btn-accent{ background:var(--accent); }
+.center{ text-align:center; }
+
+.audio-btn-lg,
+.copy-btn-lg{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  font-size:1.25rem;
+  line-height:1;
+  display:-webkit-inline-box;
+  display:-ms-inline-flexbox;
+  display:inline-flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  -webkit-transition:-webkit-transform .15s, background .2s;
+          transition:transform .15s, background .2s;
+  padding:0;
+}
+.audio-btn-lg{ background:var(--primary); color:#ffffff; }
+.audio-btn-lg:hover{ background:var(--secondary); }
+.copy-btn-lg{ background:#dfe6e9; color:var(--primary); }
+.copy-btn-lg:hover{ background:#cfd8dc; }
+
+.audio-btn-sm,
+.copy-btn-sm{
+  width:36px;
+  height:36px;
+  min-width:36px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  font-size:0.95rem;
+  line-height:1;
+  display:-webkit-inline-box;
+  display:-ms-inline-flexbox;
+  display:inline-flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  -webkit-transition:-webkit-transform .15s, background .2s;
+          transition:transform .15s, background .2s;
+  padding:0;
+}
+.audio-btn-sm{ background:var(--primary); color:#ffffff; }
+.audio-btn-sm:hover{ background:var(--secondary); }
+.copy-btn-sm{ background:#dfe6e9; color:var(--primary); width:30px; height:30px; min-width:30px; font-size:0.8rem; }
+.copy-btn-sm:hover{ background:#cfd8dc; }
+
+@-webkit-keyframes pulseSpeak{
+  0%{ -webkit-transform:scale(1); transform:scale(1); }
+  50%{ -webkit-transform:scale(1.14); transform:scale(1.14); }
+  100%{ -webkit-transform:scale(1); transform:scale(1); }
+}
+@keyframes pulseSpeak{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.14); }
+  100%{ transform:scale(1); }
+}
+.speaking{
+  -webkit-animation:pulseSpeak .7s ease-in-out infinite;
+          animation:pulseSpeak .7s ease-in-out infinite;
+}
+
+/* ---------- Flashcards ---------- */
+.flashcard-container{
+  height:350px;
+  -webkit-perspective:1000px;
+          perspective:1000px;
+  margin-bottom:16px;
+}
+.flashcard{
+  position:relative;
+  width:100%;
+  height:100%;
+  -webkit-transform-style:preserve-3d;
+          transform-style:preserve-3d;
+  -webkit-transition:-webkit-transform .6s;
+          transition:transform .6s;
+  cursor:pointer;
+}
+.flashcard.flipped{
+  -webkit-transform:rotateY(180deg);
+          transform:rotateY(180deg);
+}
+.face{
+  position:absolute;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  border-radius:10px;
+  -webkit-backface-visibility:hidden;
+          backface-visibility:hidden;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-orient:vertical;
+  -webkit-box-direction:normal;
+      -ms-flex-direction:column;
+          flex-direction:column;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  padding:18px;
+  text-align:center;
+  overflow:hidden;
+}
+.face.front{
+  background:linear-gradient(135deg, #ffffff 0%, #ecf0f1 100%);
+  border:2px solid #bdc3c7;
+  pointer-events:auto;
+}
+.face.back{
+  background:linear-gradient(135deg, #e8f4f8 0%, #d1e8f0 100%);
+  border:2px solid #a9cce3;
+  -webkit-transform:rotateY(180deg);
+          transform:rotateY(180deg);
+  pointer-events:none;
+}
+.flashcard.flipped .face.front{ pointer-events:none; }
+.flashcard.flipped .face.back{ pointer-events:auto; }
+
+.arabic-big{
+  font-size:3.5rem;
+  line-height:1.8;
+  direction:rtl;
+  unicode-bidi:isolate;
+  color:var(--primary);
+  margin-bottom:14px;
+  font-weight:600;
+  padding:0 6px;
+}
+.fc-hint{
+  position:absolute;
+  bottom:14px;
+  left:0;
+  width:100%;
+  font-size:0.72rem;
+  color:#95a5a6;
+  letter-spacing:0.4px;
+}
+.fc-emoji{
+  font-size:2.9rem;
+  line-height:1.2;
+  margin-bottom:6px;
+}
+.fc-english{
+  font-size:1.6rem;
+  font-weight:700;
+  color:var(--secondary);
+  margin-bottom:10px;
+  direction:ltr;
+}
+.fc-desc{
+  font-style:italic;
+  color:#7f8c8d;
+  font-size:0.9rem;
+  margin-top:10px;
+  max-width:460px;
+  line-height:1.45;
+}
+
+.fc-nav{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:justify;
+      -ms-flex-pack:justify;
+          justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.fc-progress{
+  font-weight:700;
+  color:var(--secondary);
+  font-size:0.95rem;
+}
+
+/* ---------- Quizzes ---------- */
+.quiz-score{
+  text-align:center;
+  font-weight:700;
+  color:var(--secondary);
+  margin-bottom:10px;
+  font-size:1rem;
+}
+.quiz-prompt{
+  text-align:center;
+  font-weight:700;
+  color:var(--primary);
+  margin-bottom:14px;
+  font-size:1rem;
+  line-height:1.4;
+}
+.word-row{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  gap:10px;
+  -ms-flex-wrap:wrap;
+      flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.arabic-quiz{
+  font-size:3rem;
+  direction:rtl;
+  unicode-bidi:isolate;
+  color:var(--primary);
+  line-height:1.8;
+  font-weight:600;
+  padding:0 4px;
+}
+
+.q-block{
+  text-align:center;
+  margin-bottom:18px;
+}
+.q-emoji{
+  font-size:3rem;
+  line-height:1.2;
+  margin-bottom:4px;
+}
+.q-english-row{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  gap:8px;
+  margin-bottom:4px;
+}
+.q-english{
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--secondary);
+  direction:ltr;
+}
+.q-desc{
+  font-style:italic;
+  color:#7f8c8d;
+  font-size:0.9rem;
+  line-height:1.45;
+  max-width:480px;
+  margin:0 auto;
+}
+
+.options{ margin-bottom:6px; }
+.option-row{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+}
+.option-btn{
+  -webkit-box-flex:1;
+      -ms-flex-positive:1;
+          flex-grow:1;
+  text-align:left;
+  padding:12px 14px;
+  border:2px solid #d5dbdf;
+  background:#ffffff;
+  border-radius:8px;
+  font-family:inherit;
+  font-size:1rem;
+  cursor:pointer;
+  color:var(--secondary);
+  font-weight:600;
+  -webkit-transition:background .15s, border-color .15s, color .15s;
+          transition:background .15s, border-color .15s, color .15s;
+  word-wrap:break-word;
+}
+.option-btn:hover:not(:disabled){ border-color:var(--primary); background:#f7fafb; }
+.option-btn:disabled{ cursor:default; }
+.option-btn.correct{
+  background:var(--correct);
+  border-color:var(--correct);
+  color:#ffffff;
+}
+.option-btn.wrong{
+  background:var(--wrong);
+  border-color:var(--wrong);
+  color:#ffffff;
+}
+.option-arabic{
+  direction:rtl;
+  unicode-bidi:isolate;
+  text-align:right;
+  font-size:1.5rem;
+  line-height:1.9;
+  padding-top:6px;
+  padding-bottom:6px;
+}
+
+.feedback{
+  text-align:center;
+  font-weight:700;
+  min-height:24px;
+  margin:12px 0 14px;
+  font-size:0.95rem;
+  line-height:1.4;
+}
+.feedback.correct{ color:var(--correct); }
+.feedback.wrong{ color:var(--wrong); }
+
+.quiz-actions{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  gap:10px;
+  -ms-flex-wrap:wrap;
+      flex-wrap:wrap;
+}
+.quiz-done{
+  display:none;
+  text-align:center;
+  font-size:1.15rem;
+  font-weight:700;
+  color:var(--accent);
+  margin:6px 0 18px;
+  line-height:1.5;
+}
+
+/* ---------- Study Guide ---------- */
+.sg-header{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-pack:justify;
+      -ms-flex-pack:justify;
+  justify-content:space-between;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  gap:10px;
+  -ms-flex-wrap:wrap;
+      flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.sg-title{
+  font-weight:700;
+  color:var(--primary);
+  font-size:1rem;
+}
+.sg-list{
+  max-height:450px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-right:4px;
+}
+.sg-item{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  gap:12px;
+  -webkit-box-align:start;
+      -ms-flex-align:start;
+          align-items:flex-start;
+  border:1px solid #ecf0f1;
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:10px;
+  background:#fbfcfd;
+}
+.sg-emoji{
+  font-size:2rem;
+  line-height:1;
+  -ms-flex-negative:0;
+      flex-shrink:0;
+}
+.sg-content{
+  -webkit-box-flex:1;
+      -ms-flex-positive:1;
+          flex-grow:1;
+  min-width:0;
+}
+.sg-arabic-row{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  gap:8px;
+  -ms-flex-wrap:wrap;
+      flex-wrap:wrap;
+  margin-bottom:2px;
+}
+.sg-arabic{
+  font-size:1.8rem;
+  direction:rtl;
+  unicode-bidi:isolate;
+  line-height:1.9;
+  color:var(--primary);
+  font-weight:600;
+}
+.sg-english{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  gap:8px;
+  font-size:1.1rem;
+  font-weight:700;
+  color:var(--secondary);
+  margin-bottom:4px;
+}
+.sg-desc{
+  font-style:italic;
+  color:#7f8c8d;
+  font-size:0.88rem;
+  line-height:1.45;
+}
+.sg-list.hide-details .sg-english,
+.sg-list.hide-details .sg-desc{ display:none; }
+
+/* ---------- Footer ---------- */
+.footer{
+  margin-top:20px;
+  padding-top:14px;
+  border-top:1px solid #ecf0f1;
+  text-align:center;
+  font-size:0.8rem;
+  color:#95a5a6;
+  line-height:1.55;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width:480px){
+  body{ padding:12px; }
+  h1{ font-size:1.35rem; }
+  .subtitle{ font-size:0.62rem; letter-spacing:1px; margin-bottom:14px; }
+  .app-container{ padding:14px; border-radius:10px; }
+  .tab{ font-size:0.74rem; padding:8px 10px; }
+  .flashcard-container{ height:320px; }
+  .face{ padding:14px; }
+  .arabic-big{ font-size:2.6rem; line-height:1.9; }
+  .fc-emoji{ font-size:2.4rem; }
+  .fc-english{ font-size:1.3rem; }
+  .fc-desc{ font-size:0.82rem; }
+  .arabic-quiz{ font-size:2.3rem; }
+  .q-emoji{ font-size:2.5rem; }
+  .q-english{ font-size:1.2rem; }
+  .q-desc{ font-size:0.82rem; }
+  .btn{ font-size:0.8rem; padding:8px 12px; }
+  .option-btn{ font-size:0.92rem; padding:10px 12px; }
+  .option-arabic{ font-size:1.25rem; }
+  .audio-btn-lg, .copy-btn-lg{ width:42px; height:42px; min-width:42px; font-size:1.1rem; }
+  .audio-btn-sm{ width:32px; height:32px; min-width:32px; font-size:0.85rem; }
+  .sg-arabic{ font-size:1.5rem; }
+  .sg-english{ font-size:1rem; }
+  .sg-list{ max-height:380px; }
+  .sg-emoji{ font-size:1.7rem; }
+  .quiz-prompt{ font-size:0.92rem; }
+  .feedback{ font-size:0.88rem; }
+}
+</style>
+</head>
+<body>
+
+<h1>Surah Al-Humazah - Behind Her Back</h1>
+<div class="subtitle">Al-Humazah  · Vocabulary Quiz</div>
+
+<div class="app-container">
+
+  <!-- TABS -->
+  <div class="nav-tabs">
+    <button type="button" class="tab active" data-tab="flashcards">Flashcards</button>
+    <button type="button" class="tab" data-tab="quiz-ar">Quiz (Ar ➔ En)</button>
+    <button type="button" class="tab" data-tab="quiz-en">Quiz (En ➔ Ar)</button>
+    <button type="button" class="tab" data-tab="study">Study Guide</button>
+    <a class="tab nav-back" href="index.html">&#8592; All Surahs</a>
+  </div>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <div class="tab-panel active" id="tab-flashcards">
+    <div class="flashcard-container">
+      <div class="flashcard" id="flashcard">
+        <div class="face front">
+          <div class="arabic-big" id="fc-arabic"></div>
+          <button type="button" class="audio-btn-lg" id="fc-audio-ar" aria-label="Play Arabic audio">🔊</button>
+          <div class="fc-hint">Tap card to flip</div>
+        </div>
+        <div class="face back">
+          <div class="fc-emoji" id="fc-emoji"></div>
+          <div class="fc-english" id="fc-english"></div>
+          <button type="button" class="audio-btn-sm" id="fc-audio-en" aria-label="Play English audio">🔊</button>
+          <div class="fc-desc" id="fc-desc"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-nav">
+      <button type="button" class="btn" id="fc-prev">‹ Previous</button>
+      <span class="fc-progress" id="fc-progress">1 / 12</span>
+      <button type="button" class="btn" id="fc-next">Next ›</button>
+    </div>
+
+    <div class="center">
+      <button type="button" class="btn btn-accent" id="fc-shuffle">🔀 Shuffle Deck</button>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ Ar -> En ============ -->
+  <div class="tab-panel" id="tab-quiz-ar">
+    <div class="quiz-score" id="q1-score">Score: 0 / 12</div>
+    <div class="quiz-prompt" id="q1-prompt">What is the meaning of this word?</div>
+
+    <div class="word-row" id="q1-wordrow">
+      <span class="arabic-quiz" id="q1-word"></span>
+      <button type="button" class="audio-btn-lg" id="q1-audio" aria-label="Play Arabic audio">🔊</button>
+      <button type="button" class="copy-btn-lg" id="q1-copy" aria-label="Copy Arabic word">📋</button>
+    </div>
+
+    <div class="quiz-done" id="q1-done"></div>
+
+    <div class="options" id="q1-options"></div>
+    <div class="feedback" id="q1-feedback"></div>
+
+    <div class="quiz-actions">
+      <button type="button" class="btn" id="q1-next" disabled>Next Question</button>
+      <button type="button" class="btn btn-accent" id="q1-restart">Restart Quiz</button>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ En -> Ar ============ -->
+  <div class="tab-panel" id="tab-quiz-en">
+    <div class="quiz-score" id="q2-score">Score: 0 / 12</div>
+    <div class="quiz-prompt" id="q2-prompt">Which Arabic word matches this meaning?</div>
+
+    <div class="q-block" id="q2-block">
+      <div class="q-emoji" id="q2-emoji"></div>
+      <div class="q-english-row">
+        <span class="q-english" id="q2-english"></span>
+        <button type="button" class="audio-btn-sm" id="q2-audio" aria-label="Play English audio">🔊</button>
+      </div>
+      <div class="q-desc" id="q2-desc"></div>
+    </div>
+
+    <div class="quiz-done" id="q2-done"></div>
+
+    <div class="options" id="q2-options"></div>
+    <div class="feedback" id="q2-feedback"></div>
+
+    <div class="quiz-actions">
+      <button type="button" class="btn" id="q2-next" disabled>Next Question</button>
+      <button type="button" class="btn btn-accent" id="q2-restart">Restart Quiz</button>
+    </div>
+  </div>
+
+  <!-- ============ STUDY GUIDE ============ -->
+  <div class="tab-panel" id="tab-study">
+    <div class="sg-header">
+      <span class="sg-title">All 12 Vocabulary Words</span>
+      <button type="button" class="btn btn-accent" id="sg-toggle">Hide Details</button>
+    </div>
+    <div class="sg-list" id="sg-list"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Browser text-to-speech is not perfect for Quranic Arabic. Please verify pronunciation with a
+    teacher or a dedicated Quran app. For accurate audio, use the 📋 copy button to copy the exact
+    word and hear it in your own app.
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     VOCABULARY DATA (Week 11 — Al-Humazah, 12 words)
+     ========================================================= */
+  var VOCAB = [
+    { id: 1,  arabic: 'وَيْلٌ',           english: 'Woe',                          emoji: '⚠️', description: 'Big trouble — a strong word of warning and doom.' },
+    { id: 2,  arabic: 'لِكُلِّ',           english: 'For every',                     emoji: '🔁', description: 'For each and every one — no one is left out.' },
+    { id: 3,  arabic: 'هُمَزَةٌ لُمَزَةٌ', english: 'Mocker and fault-finder',       emoji: '😜', description: 'Someone who mocks people and finds faults again and again.' },
+    { id: 4,  arabic: 'جَمَعَ',           english: 'Gathered',                      emoji: '🧲', description: 'Pulled money in from everywhere into one pile.' },
+    { id: 5,  arabic: 'مَالًا',            english: 'Money',                         emoji: '💰', description: 'Coins, notes and gold — the wealth people work for and save.' },
+    { id: 6,  arabic: 'وَعَدَدَهُ',        english: 'And counted it',                emoji: '🔢', description: 'Counted his pile, one coin at a time, again and again.' },
+    { id: 7,  arabic: 'يَحْسَبُ',          english: 'He thinks',                     emoji: '🤔', description: 'He thinks or assumes something is true.' },
+    { id: 8,  arabic: 'أَخْلَدَهُ',        english: 'Will make him last forever',    emoji: '♾️', description: 'He believed his money would make him live forever.' },
+    { id: 9,  arabic: 'كَلَّا',            english: 'No way!',                       emoji: '🚫', description: 'No! A strong stop — Allah\u2019s answer to his claim.' },
+    { id: 10, arabic: 'الْحُطْمَةِ',       english: 'The crusher',                   emoji: '🧱', description: 'The thing that crushes again and again.' },
+    { id: 11, arabic: 'نَارُ اللَّهِ',     english: 'The fire of Allah',             emoji: '🔥', description: 'Allah\u2019s blazing, kindled fire.' },
+    { id: 12, arabic: 'الْأَفْئِدَةِ',     english: 'The hearts',                    emoji: '❤️', description: 'The hearts — the fire reaches up to them.' }
+  ];
+
+  /* =========================================================
+     AUDIO ENGINE
+     ========================================================= */
+  var synth = (typeof window !== 'undefined' && window.speechSynthesis) ? window.speechSynthesis : null;
+  var voiceList = [];
+
+  function refreshVoices() {
+    if (!synth) return;
+    try { voiceList = synth.getVoices() || []; } catch (e) { voiceList = []; }
+  }
+
+  if (synth) {
+    refreshVoices();
+    if (typeof synth.onvoiceschanged !== 'undefined') {
+      synth.onvoiceschanged = refreshVoices;
+    }
+  }
+
+  function pickVoice(lang) {
+    if (!voiceList || !voiceList.length) refreshVoices();
+    if (!voiceList || !voiceList.length) return null;
+    var target = String(lang || '').toLowerCase();
+    var short = target.split('-')[0];
+    var exact = null, prefix = null, i, v, vl;
+    for (i = 0; i < voiceList.length; i++) {
+      v = voiceList[i];
+      vl = String(v.lang || '').replace('_', '-').toLowerCase();
+      if (vl === target) {
+        if (!exact) exact = v;
+      } else if (vl.indexOf(short) === 0) {
+        if (!prefix) prefix = v;
+      }
+    }
+    return exact || prefix || null;
+  }
+
+  /* ---- REQUIRED: Final Harakah trick (comma only, never long vowels) ---- */
+  function getTTSText(text, lang) {
+    if (!text) return '';
+    if (lang && String(lang).toLowerCase().indexOf('ar') === 0) {
+      var last = text.charAt(text.length - 1);
+      // Fathah, Dammah, Kasrah -> append Arabic comma
+      if (last === '\u064E' || last === '\u064F' || last === '\u0650') {
+        return text + '\u060C';
+      }
+      // Sukoon -> unchanged
+      if (last === '\u0652') {
+        return text;
+      }
+    }
+    return text;
+  }
+
+  function cancelSpeech() {
+    if (!synth) return;
+    try { synth.cancel(); } catch (e) {}
+  }
+
+  function speak(text, lang, btn) {
+    if (!synth || !text) return;
+    try { synth.cancel(); } catch (e) {}
+
+    var utter;
+    try {
+      utter = new SpeechSynthesisUtterance(getTTSText(text, lang));
+    } catch (e) { return; }
+
+    utter.lang = lang;
+    utter.rate = 0.5;   // very slow
+    utter.pitch = 1.0;
+    utter.volume = 1.0;
+
+    var v = pickVoice(lang);
+    if (v) { utter.voice = v; }
+
+    if (btn) {
+      btn.classList.add('speaking');
+      var clear = function () { btn.classList.remove('speaking'); };
+      utter.onend = clear;
+      utter.onerror = clear;
+      // safety net
+      window.setTimeout(function () {
+        if (!synth.speaking) clear();
+      }, 6000);
+    }
+
+    // small tick helps Chrome after cancel()
+    window.setTimeout(function () {
+      try { synth.speak(utter); } catch (e) {}
+    }, 0);
+  }
+
+  /* =========================================================
+     COPY HELPER
+     ========================================================= */
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  function copyText(text, btn) {
+    var showDone = function () {
+      if (!btn) return;
+      var old = btn.getAttribute('data-orig') || btn.textContent;
+      btn.setAttribute('data-orig', old);
+      btn.textContent = '✅';
+      window.setTimeout(function () {
+        btn.textContent = btn.getAttribute('data-orig') || '📋';
+      }, 1500);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showDone, function () {
+        fallbackCopy(text);
+        showDone();
+      });
+    } else {
+      fallbackCopy(text);
+      showDone();
+    }
+  }
+
+  function shuffleArray(arr) {
+    var a = arr.slice(), i, j, t;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* =========================================================
+     TABS
+     ========================================================= */
+  var tabs = document.querySelectorAll('.tab');
+  var panels = document.querySelectorAll('.tab-panel');
+
+  function activateTab(name) {
+    var i;
+    for (i = 0; i < tabs.length; i++) {
+      if (tabs[i].getAttribute('data-tab') === name) {
+        tabs[i].className = 'tab active';
+      } else {
+        tabs[i].className = 'tab';
+      }
+    }
+    for (i = 0; i < panels.length; i++) {
+      panels[i].className = (panels[i].id === 'tab-' + name) ? 'tab-panel active' : 'tab-panel';
+    }
+    cancelSpeech();
+  }
+
+  (function bindTabs() {
+    var i;
+    for (i = 0; i < tabs.length; i++) {
+      tabs[i].addEventListener('click', function () {
+        activateTab(this.getAttribute('data-tab'));
+      });
+    }
+  })();
+
+  /* =========================================================
+     FLASHCARDS
+     ========================================================= */
+  var flashState = { order: VOCAB.slice(), idx: 0, flipped: false };
+
+  var fcCard     = document.getElementById('flashcard');
+  var fcArabic   = document.getElementById('fc-arabic');
+  var fcEmoji    = document.getElementById('fc-emoji');
+  var fcEnglish  = document.getElementById('fc-english');
+  var fcDesc     = document.getElementById('fc-desc');
+  var fcProgress = document.getElementById('fc-progress');
+  var fcPrev     = document.getElementById('fc-prev');
+  var fcNext     = document.getElementById('fc-next');
+
+  function currentFlashVocab() {
+    return flashState.order[flashState.idx];
+  }
+
+  function renderFlashcard() {
+    var v = currentFlashVocab();
+    fcCard.classList.remove('flipped');
+    flashState.flipped = false;
+
+    fcArabic.textContent  = v.arabic;
+    fcEmoji.textContent   = v.emoji;
+    fcEnglish.textContent = v.english;
+    fcDesc.textContent    = v.description;
+
+    fcProgress.textContent = (flashState.idx + 1) + ' / ' + flashState.order.length;
+    fcPrev.disabled = (flashState.idx === 0);
+    fcNext.disabled = (flashState.idx === flashState.order.length - 1);
+  }
+
+  fcCard.addEventListener('click', function () {
+    flashState.flipped = !flashState.flipped;
+    if (flashState.flipped) {
+      fcCard.classList.add('flipped');
+    } else {
+      fcCard.classList.remove('flipped');
+    }
+  });
+
+  document.getElementById('fc-audio-ar').addEventListener('click', function (e) {
+    e.stopPropagation();
+    speak(currentFlashVocab().arabic, 'ar-SA', this);
+  });
+
+  document.getElementById('fc-audio-en').addEventListener('click', function (e) {
+    e.stopPropagation();
+    speak(currentFlashVocab().english, 'en-US', this);
+  });
+
+  fcPrev.addEventListener('click', function () {
+    if (flashState.idx > 0) {
+      flashState.idx--;
+      cancelSpeech();
+      renderFlashcard();
+    }
+  });
+
+  fcNext.addEventListener('click', function () {
+    if (flashState.idx < flashState.order.length - 1) {
+      flashState.idx++;
+      cancelSpeech();
+      renderFlashcard();
+    }
+  });
+
+  document.getElementById('fc-shuffle').addEventListener('click', function () {
+    flashState.order = shuffleArray(VOCAB);
+    flashState.idx = 0;
+    cancelSpeech();
+    renderFlashcard();
+  });
+
+  /* =========================================================
+     QUIZ ENGINE
+     ========================================================= */
+  function Quiz(ids, mode) {
+    var self = this;
+    this.ids = ids;
+    this.mode = mode; // 'ar2en' | 'en2ar'
+    this.order = [];
+    this.idx = 0;
+    this.score = 0;
+    this.answered = false;
+    this.done = false;
+    this.current = null;
+
+    this.el = {};
+    var key;
+    for (key in ids) {
+      if (Object.prototype.hasOwnProperty.call(ids, key)) {
+        this.el[key] = document.getElementById(ids[key]);
+      }
+    }
+
+    this.el.next.addEventListener('click', function () { self.goNext(); });
+    this.el.restart.addEventListener('click', function () { self.start(); });
+
+    if (this.el.audio) {
+      this.el.audio.addEventListener('click', function () {
+        if (!self.current) return;
+        if (self.mode === 'ar2en') {
+          speak(self.current.arabic, 'ar-SA', this);
+        } else {
+          speak(self.current.english, 'en-US', this);
+        }
+      });
+    }
+
+    if (this.el.copy) {
+      this.el.copy.addEventListener('click', function () {
+        if (!self.current) return;
+        copyText(self.current.arabic, this);
+      });
+    }
+
+    this.start();
+  }
+
+  Quiz.prototype.start = function () {
+    this.order = shuffleArray(VOCAB);
+    this.idx = 0;
+    this.score = 0;
+    this.answered = false;
+    this.done = false;
+    cancelSpeech();
+    this.render();
+  };
+
+  Quiz.prototype.render = function () {
+    var el = this.el;
+    var total = this.order.length;
+    var i;
+
+    el.score.textContent = 'Score: ' + this.score + ' / ' + total;
+    el.feedback.textContent = '';
+    el.feedback.className = 'feedback';
+    el.options.innerHTML = '';
+    el.next.disabled = true;
+
+    if (el.done) { el.done.style.display = 'none'; }
+    if (el.block) { el.block.style.display = ''; }
+    if (el.wordrow) { el.wordrow.style.display = ''; }
+
+    /* ---- completed ---- */
+    if (this.done) {
+      this.current = null;
+      el.prompt.textContent = 'Quiz Completed! 🎉';
+      if (el.wordrow) { el.wordrow.style.display = 'none'; }
+      if (el.block) { el.block.style.display = 'none'; }
+      if (el.done) {
+        el.done.textContent = 'Final score: ' + this.score + ' / ' + total + ' — great work! 🎉';
+        el.done.style.display = 'block';
+      }
+      el.next.disabled = true;
+      el.next.textContent = 'Next Question';
+      return;
+    }
+
+    /* ---- question ---- */
+    var q = this.order[this.idx];
+    this.current = q;
+
+    el.next.textContent = (this.idx === total - 1) ? 'See Results' : 'Next Question';
+
+    if (this.mode === 'ar2en') {
+      el.prompt.textContent = 'What is the meaning of this word?';
+      el.word.textContent = q.arabic;
+    } else {
+      el.prompt.textContent = 'Which Arabic word matches this meaning?';
+      el.emoji.textContent = q.emoji;
+      el.english.textContent = q.english;
+      el.desc.textContent = q.description;
+    }
+
+    /* ---- options ---- */
+    var others = [];
+    for (i = 0; i < VOCAB.length; i++) {
+      if (VOCAB[i].id !== q.id) others.push(VOCAB[i]);
+    }
+    others = shuffleArray(others).slice(0, 3);
+    var opts = shuffleArray(others.concat([q]));
+
+    var self = this;
+    for (i = 0; i < opts.length; i++) {
+      (function (opt) {
+        var row = document.createElement('div');
+        row.className = 'option-row';
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn' + (self.mode === 'en2ar' ? ' option-arabic' : '');
+        btn.textContent = (self.mode === 'ar2en') ? opt.english : opt.arabic;
+        btn.setAttribute('data-id', String(opt.id));
+        btn.addEventListener('click', function () { self.choose(opt, btn); });
+
+        var audioBtn = document.createElement('button');
+        audioBtn.type = 'button';
+        audioBtn.className = 'audio-btn-sm';
+        audioBtn.textContent = '🔊';
+        audioBtn.setAttribute('aria-label', 'Play option audio');
+        audioBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (self.mode === 'ar2en') {
+            speak(opt.english, 'en-US', audioBtn);
+          } else {
+            speak(opt.arabic, 'ar-SA', audioBtn);
+          }
+        });
+
+        row.appendChild(btn);
+        row.appendChild(audioBtn);
+        self.el.options.appendChild(row);
+      })(opts[i]);
+    }
+  };
+
+  Quiz.prototype.choose = function (opt, btn) {
+    if (this.answered || this.done) return;
+    this.answered = true;
+
+    var q = this.order[this.idx];
+    var isCorrect = (opt.id === q.id);
+    if (isCorrect) { this.score++; }
+
+    var btns = this.el.options.querySelectorAll('.option-btn');
+    var i;
+    for (i = 0; i < btns.length; i++) {
+      btns[i].disabled = true;
+      if (btns[i].getAttribute('data-id') === String(q.id)) {
+        btns[i].classList.add('correct');
+      }
+    }
+    if (!isCorrect) { btn.classList.add('wrong'); }
+
+    this.el.score.textContent = 'Score: ' + this.score + ' / ' + this.order.length;
+
+    if (isCorrect) {
+      this.el.feedback.textContent = 'Correct! ✅';
+      this.el.feedback.className = 'feedback correct';
+    } else {
+      var answerText = (this.mode === 'ar2en') ? q.english : q.arabic;
+      this.el.feedback.textContent = 'Incorrect. The correct answer is: ' + answerText;
+      this.el.feedback.className = 'feedback wrong';
+    }
+
+    this.el.next.disabled = false;
+  };
+
+  Quiz.prototype.goNext = function () {
+    if (!this.answered) return;
+    cancelSpeech();
+    if (this.idx < this.order.length - 1) {
+      this.idx++;
+      this.answered = false;
+      this.render();
+    } else {
+      this.done = true;
+      this.render();
+    }
+  };
+
+  var quizArEn = new Quiz({
+    score: 'q1-score',
+    prompt: 'q1-prompt',
+    wordrow: 'q1-wordrow',
+    word: 'q1-word',
+    audio: 'q1-audio',
+    copy: 'q1-copy',
+    options: 'q1-options',
+    feedback: 'q1-feedback',
+    next: 'q1-next',
+    restart: 'q1-restart',
+    done: 'q1-done'
+  }, 'ar2en');
+
+  var quizEnAr = new Quiz({
+    score: 'q2-score',
+    prompt: 'q2-prompt',
+    block: 'q2-block',
+    emoji: 'q2-emoji',
+    english: 'q2-english',
+    desc: 'q2-desc',
+    audio: 'q2-audio',
+    options: 'q2-options',
+    feedback: 'q2-feedback',
+    next: 'q2-next',
+    restart: 'q2-restart',
+    done: 'q2-done'
+  }, 'en2ar');
+
+  /* =========================================================
+     STUDY GUIDE
+     ========================================================= */
+  (function buildStudyGuide() {
+    var list = document.getElementById('sg-list');
+    var html = '', i, v;
+
+    for (i = 0; i < VOCAB.length; i++) {
+      v = VOCAB[i];
+      html +=
+        '<div class="sg-item">' +
+          '<div class="sg-emoji">' + v.emoji + '</div>' +
+          '<div class="sg-content">' +
+            '<div class="sg-arabic-row">' +
+              '<span class="sg-arabic">' + v.arabic + '</span>' +
+              '<button type="button" class="audio-btn-sm sg-audio-ar" data-idx="' + i + '" aria-label="Play Arabic audio">🔊</button>' +
+              '<button type="button" class="copy-btn-sm sg-copy" data-idx="' + i + '" aria-label="Copy Arabic word">📋</button>' +
+            '</div>' +
+            '<div class="sg-english">' +
+              '<span>' + v.english + '</span>' +
+              '<button type="button" class="audio-btn-sm sg-audio-en" data-idx="' + i + '" aria-label="Play English audio">🔊</button>' +
+            '</div>' +
+            '<div class="sg-desc">' + v.description + '</div>' +
+          '</div>' +
+        '</div>';
+    }
+    list.innerHTML = html;
+
+    list.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || t.nodeType !== 1) return;
+      var idx = t.getAttribute('data-idx');
+      if (idx === null) return;
+      var item = VOCAB[parseInt(idx, 10)];
+      if (!item) return;
+
+      if (t.className.indexOf('sg-audio-ar') !== -1) {
+        e.stopPropagation();
+        speak(item.arabic, 'ar-SA', t);
+      } else if (t.className.indexOf('sg-audio-en') !== -1) {
+        e.stopPropagation();
+        speak(item.english, 'en-US', t);
+      } else if (t.className.indexOf('sg-copy') !== -1) {
+        e.stopPropagation();
+        copyText(item.arabic, t);
+      }
+    });
+
+    var toggleBtn = document.getElementById('sg-toggle');
+    toggleBtn.addEventListener('click', function () {
+      var hidden = list.className.indexOf('hide-details') !== -1;
+      if (hidden) {
+        list.className = 'sg-list';
+        toggleBtn.textContent = 'Hide Details';
+      } else {
+        list.className = 'sg-list hide-details';
+        toggleBtn.textContent = 'Show Details';
+      }
+    });
+  })();
+
+  /* =========================================================
+     GLOBAL SPEECH CLEAN-UP
+     ========================================================= */
+  window.addEventListener('pagehide', cancelSpeech);
+  window.addEventListener('beforeunload', cancelSpeech);
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) cancelSpeech();
+  });
+
+  /* =========================================================
+     INITIAL RENDER
+     ========================================================= */
+  renderFlashcard();
+
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c9f17348dafb4107b3ffcd0c62f15653"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
